@@ -17,4 +17,6 @@
     <string name="login_failed">"Login failed"</string>
     <string name="title_activity_auth">AuthActivity</string>
     <string name="default_web_client_id">462319976915-fhkb11auqjet4ktb20bo6j6mtgq806l3.apps.googleusercontent.com</string>
+    <string name="default_receiverId">0mC4FUdAg0WHXdsbkbmpQslvVK12</string>
+    <string name="default_receiverName">ADMIN</string>
 </resources>

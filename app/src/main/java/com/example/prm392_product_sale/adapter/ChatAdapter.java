@@ -1,9 +1,11 @@
 package com.example.prm392_product_sale.adapter;
 
+import android.content.Context;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,50 +17,46 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
+public class ChatAdapter extends BaseAdapter {
 
+    private Context context;
     private List<ChatMessage> chatMessages;
 
-    public ChatAdapter(List<ChatMessage> chatMessages) {
+    public ChatAdapter( Context context, List<ChatMessage> chatMessages) {
+        this.context = context;
         this.chatMessages = chatMessages;
     }
-
-    @Nonnull
     @Override
-    public ChatViewHolder onCreateViewHolder(@Nonnull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_chat_message, parent, false);
-        return new ChatViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(@Nonnull ChatViewHolder holder, int position) {
-        ChatMessage message = chatMessages.get(position);
-        holder.bind(message);
-    }
-
-    @Override
-    public int getItemCount() {
+    public int getCount() {
         return chatMessages.size();
     }
+    @Override
+    public Object getItem(int position) {
+        return chatMessages.get(position);
+    }
 
-    class ChatViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
-        TextView messageUser;
-        TextView messageText;
-        TextView messageTime;
-
-        public ChatViewHolder(View itemView) {
-            super(itemView);
-            messageUser = itemView.findViewById(R.id.tv_message_user);
-            messageText = itemView.findViewById(R.id.tv_message_text);
-            messageTime = itemView.findViewById(R.id.tv_message_time);
+    @Override
+    public View getView(int position, View itemView, ViewGroup parent) {
+        if (itemView == null) {
+            itemView = LayoutInflater.from(context)
+                    .inflate(R.layout.item_chat_message, parent, false);
         }
 
-        void bind(ChatMessage message) {
-            messageUser.setText(message.getSenderId());
-            messageText.setText(message.getMessage());
-            messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", message.getTimestamp()));
-        }
+        ChatMessage message = chatMessages.get(position);
+
+        TextView messageUser = itemView.findViewById(R.id.tv_message_user);
+        TextView messageText = itemView.findViewById(R.id.tv_message_text);
+        TextView messageTime = itemView.findViewById(R.id.tv_message_time);;
+
+        messageUser.setText(message.getSenderName());
+        messageText.setText(message.getMessage());
+        messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", message.getTimestamp()));
+
+        return itemView;
     }
 }

@@ -1,26 +1,75 @@
 package com.example.prm392_product_sale.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.prm392_product_sale.R;
+import com.example.prm392_product_sale.adapter.ConversationAdapter;
+import com.example.prm392_product_sale.databinding.ActivityAdminConversationListBinding;
+import com.example.prm392_product_sale.model.Conversation;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-public class AdminConversationListActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class AdminConversationListActivity extends AppCompatActivity implements ConversationAdapter.OnConversationClickListener {
+
+    private RecyclerView recyclerViewConversations;
+    private ConversationAdapter conversationAdapter;
+    private List<Conversation> conversations = new ArrayList<>();
+
+    private FirebaseFirestore firestore;
+    private CollectionReference conversationCollection;
+    ActivityAdminConversationListBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_admin_conversation_list);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+
+        binding = ActivityAdminConversationListBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        recyclerViewConversations = findViewById(R.id.rv_conversation);
+        firestore = FirebaseFirestore.getInstance();
+        conversationCollection = firestore.collection("conversations");
+
+        setupRecyclerView();
+
+        loadConversations();
+    }
+
+    private void setupRecyclerView() {
+        conversationAdapter = new ConversationAdapter(conversations, this);
+        recyclerViewConversations.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewConversations.setAdapter(conversationAdapter);
+    }
+
+    private void loadConversations() {
+        conversationCollection.addSnapshotListener((queryDocumentSnapshots, e) -> {
+            if (e != null) {
+                return;
+            }
+            if (queryDocumentSnapshots != null) {
+                conversations.clear();
+                for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
+                    Conversation conversation = documentSnapshot.toObject(Conversation.class);
+                    conversations.add(conversation);
+                }
+                conversationAdapter.notifyDataSetChanged();
+            }
         });
+    }
+
+    @Override
+    public void onConversationClick(String userId) {
+        Intent chatIntent = new Intent(this, ChatActivity.class);
+        chatIntent.putExtra("receiverId", userId);
+        startActivity(chatIntent);
     }
 }
