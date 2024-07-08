@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">PRM392_Product_Sale</string>
+    <string name="title_chat">Chats</string>
+    <string name="title_home">Home</string>
+    <string name="title_cart">Cart</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_profile">Profile</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="title_activity_auth">AuthActivity</string>
+    <string name="default_web_client_id">462319976915-fhkb11auqjet4ktb20bo6j6mtgq806l3.apps.googleusercontent.com</string>
+</resources>
