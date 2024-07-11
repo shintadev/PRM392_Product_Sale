@@ -1,25 +1,24 @@
 package com.example.prm392_product_sale.ui.profile;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.prm392_product_sale.R;
+import com.example.prm392_product_sale.activity.AdminActivity;
 import com.example.prm392_product_sale.activity.AdminConversationListActivity;
-import com.example.prm392_product_sale.activity.LoginActivity;
 import com.example.prm392_product_sale.activity.MainActivity;
 import com.example.prm392_product_sale.adapter.ProfileOptionAdapter;
 import com.example.prm392_product_sale.databinding.FragmentProfileBinding;
@@ -51,6 +50,22 @@ public class ProfileFragment extends Fragment {
     private FirebaseFirestore firestore;
     private FragmentProfileBinding binding;
 
+    private OnDataPass dataPasser;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            dataPasser = (OnDataPass) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnDataPass");
+        }
+    }
+
+    public void passDataToActivity() {
+        dataPasser.onDataPass();
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -58,24 +73,26 @@ public class ProfileFragment extends Fragment {
         View root = binding.getRoot();
 
         mAuth = FirebaseAuth.getInstance();
+        // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
-
         mGoogleSignInClient = GoogleSignIn.getClient(this.getContext(), gso);
+
         firestore = FirebaseFirestore.getInstance();
 
         binding.btnLogin.setOnClickListener(v -> signIn());
         binding.btnLogout.setOnClickListener(v -> {
             mAuth.signOut();
+            mGoogleSignInClient.signOut();
             loadProfile(null);
+            passDataToActivity();
         });
 
         RecyclerView recyclerView = binding.profileOptionsList;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Setup adapter with dummy data
         List<String> options = new ArrayList<>();
         options.add("Map");
 
@@ -90,9 +107,6 @@ public class ProfileFragment extends Fragment {
         super.onStart();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-//        if (currentUser != null) {
-//            checkUserRole(currentUser.getUid());
-//        }
         loadProfile(currentUser);
     }
 
@@ -117,17 +131,18 @@ public class ProfileFragment extends Fragment {
         mAuth.signInWithCredential(credential).addOnCompleteListener(requireActivity(), new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, "signInWithCredential:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        if (user != null) {
-                            checkUserRole(user.getUid());
-                        }
-                    } else {
-                        Log.w(TAG, "signInWithCredential:failure", task.getException());
-                        Toast.makeText( requireActivity(), "Authentication Failed.", Toast.LENGTH_SHORT).show();
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "signInWithCredential:success");
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    if (user != null) {
+                        checkUserRole(user.getUid());
                     }
-                }});
+                } else {
+                    Log.w(TAG, "signInWithCredential:failure", task.getException());
+                    Toast.makeText(requireActivity(), "Authentication Failed.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void signIn() {
@@ -144,7 +159,8 @@ public class ProfileFragment extends Fragment {
                         if (document.exists()) {
                             boolean isAdmin = Boolean.TRUE.equals(document.getBoolean("admin"));
                             if (isAdmin) {
-                                startActivity(new Intent(this.getContext(), AdminConversationListActivity.class));
+                                Intent adminIntent = new Intent(this.getContext(), AdminActivity.class);
+                                startActivity(adminIntent);
                             } else {
                                 Intent chatIntent = new Intent(this.getContext(), MainActivity.class);
                                 startActivity(chatIntent);
@@ -190,8 +206,10 @@ public class ProfileFragment extends Fragment {
 
             profileImage.setImageURI(currentUser.getPhotoUrl());
             name.setText(currentUser.getDisplayName());
-
-
         }
+    }
+
+    public interface OnDataPass {
+        void onDataPass();
     }
 }

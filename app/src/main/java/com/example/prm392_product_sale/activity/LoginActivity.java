@@ -109,10 +109,10 @@ public class LoginActivity extends AppCompatActivity {
                         if (document.exists()) {
                             boolean isAdmin = Boolean.TRUE.equals(document.getBoolean("isAdmin"));
                             if (isAdmin) {
-                                startActivity(new Intent(this, AdminConversationListActivity.class));
+                                Intent adminIntent = new Intent(this, AdminActivity.class);
+                                startActivity(adminIntent);
                             } else {
                                 Intent chatIntent = new Intent(this, MainActivity.class);
-//                                chatIntent.putExtra("chatWithUserId", "adminId"); // replace "adminId" with actual admin userId
                                 startActivity(chatIntent);
                             }
                             finish();

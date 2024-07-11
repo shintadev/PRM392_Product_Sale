@@ -1,7 +1,11 @@
 package com.example.prm392_product_sale.activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,6 +48,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        Button buttonGetDirections = binding.btnGetDirections;
+        buttonGetDirections.setOnClickListener(v -> openGoogleMapsDirections(STORE_LOCATION));
     }
 
     @Override
@@ -63,5 +70,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void openGoogleMapsDirections(LatLng location) {
+        String uri = "http://maps.google.com/maps?daddr=" + location.latitude + "," + location.longitude;
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        intent.setPackage("com.google.android.apps.maps");
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 }

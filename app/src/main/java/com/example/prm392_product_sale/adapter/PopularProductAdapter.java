@@ -17,7 +17,7 @@ import com.example.prm392_product_sale.model.Product;
 
 import java.util.List;
 
-public class PopularProductAdapter extends RecyclerView.Adapter<PopularProductAdapter.ViewHolder>{
+public class PopularProductAdapter extends RecyclerView.Adapter<PopularProductAdapter.ViewHolder> {
     private List<Product> options;
 
     public PopularProductAdapter(List<Product> options) {

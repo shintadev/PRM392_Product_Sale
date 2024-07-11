@@ -21,10 +21,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     private List<Conversation> conversations;
     private OnConversationClickListener listener;
 
-    public interface OnConversationClickListener {
-        void onConversationClick(String userId);
-    }
-
     public ConversationAdapter(List<Conversation> conversations, OnConversationClickListener listener) {
         this.conversations = conversations;
         this.listener = listener;
@@ -49,10 +45,14 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
     }
 
+    public interface OnConversationClickListener {
+        void onConversationClick(String userId, String userName);
+    }
+
     static class ConversationViewHolder extends RecyclerView.ViewHolder {
 
         private TextView userName;
-        private  TextView latestMessage;
+        private TextView latestMessage;
 
         public ConversationViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -63,7 +63,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         public void bind(Conversation conversation, OnConversationClickListener listener) {
             userName.setText(conversation.getUserName());
             latestMessage.setText(conversation.getLatestMessage());
-            itemView.setOnClickListener(v -> listener.onConversationClick(conversation.getUserId()));
+            itemView.setOnClickListener(v -> listener.onConversationClick(conversation.getUserId(), conversation.getUserName()));
         }
     }
 }
