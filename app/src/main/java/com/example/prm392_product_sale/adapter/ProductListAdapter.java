@@ -1,6 +1,7 @@
 package com.example.prm392_product_sale.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.prm392_product_sale.R;
+import com.example.prm392_product_sale.activity.ProductDetailActivity;
 import com.example.prm392_product_sale.model.Product;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -53,6 +55,12 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         Glide.with(context)
                 .load(product.getUrl())
                 .into(holder.ivProduct);
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ProductDetailActivity.class);
+            intent.putExtra("productId", product.getId());
+            context.startActivity(intent);
+        });
     }
 
     private void removeProduct(Product product) {
@@ -65,6 +73,11 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     @Override
     public int getItemCount() {
         return productList.size();
+    }
+
+    public void updateList(List<Product> newList) {
+        productList = newList;
+        notifyDataSetChanged();
     }
 
     public static class ProductListViewHolder extends RecyclerView.ViewHolder {

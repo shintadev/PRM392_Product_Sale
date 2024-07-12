@@ -69,14 +69,14 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <Button
-            android:id="@+id/btn_product_less"
+            android:id="@+id/btn_product_less_cart"
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="-" />
 
         <EditText
-            android:id="@+id/et_product_quantity"
+            android:id="@+id/et_product_quantity_cart"
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -85,7 +85,7 @@
             android:textAlignment="center" />
 
         <Button
-            android:id="@+id/btn_product_more"
+            android:id="@+id/btn_product_more_cart"
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

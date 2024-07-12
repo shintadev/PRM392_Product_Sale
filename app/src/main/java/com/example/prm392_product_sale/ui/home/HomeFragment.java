@@ -5,6 +5,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.SearchView;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -13,6 +17,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.prm392_product_sale.R;
+import com.example.prm392_product_sale.activity.MainActivity;
 import com.example.prm392_product_sale.adapter.PopularProductAdapter;
 import com.example.prm392_product_sale.adapter.ProductListAdapter;
 import com.example.prm392_product_sale.databinding.FragmentHomeBinding;
@@ -22,13 +28,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HomeFragment extends Fragment {
 
     private static final String TAG = "HomeFragment";
     private FirebaseFirestore db;
-    private List<Product> productList;
+    private List<Product> productList, popularProductList;
     private FragmentHomeBinding binding;
     private PopularProductAdapter popularProductAdapter;
     private ProductListAdapter productAdapter;
@@ -52,14 +60,75 @@ public class HomeFragment extends Fragment {
 
         // Initialize the product list
         productList = new ArrayList<>();
-
-        // Load products from Firestore
-        loadProducts();
+        popularProductList = new ArrayList<>();
 
         return root;
     }
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (getActivity() != null) {
+            SearchView searchView = getActivity().findViewById(R.id.sv_main_search);
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    List<Product> filteredList = productList.stream()
+                            .filter(product -> product.getTitle().toLowerCase().contains(newText.toLowerCase()))
+                            .collect(Collectors.toList());
+                    if (!filteredList.isEmpty()) {
+                        productAdapter.updateList(filteredList);
+                    }
+                    return true;
+                }
+            });
+        }
+
+        Spinner sortSpinner = binding.sortSpinner;
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireActivity(),
+                R.array.sort_options, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortSpinner.setAdapter(adapter);
+
+        sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0: // Sort by Name
+                        Collections.sort(productList, (p1, p2) -> p1.getTitle().compareToIgnoreCase(p2.getTitle()));
+                        break;
+                    case 1: // Sort by Price (Low to High)
+                        Collections.sort(productList, (p1, p2) -> Float.compare(p1.getPrice(), p2.getPrice()));
+                        break;
+                    case 2: // Sort by Price (High to Low)
+                        Collections.sort(productList, (p1, p2) -> Float.compare(p2.getPrice(), p1.getPrice()));
+                        break;
+                }
+                if (productAdapter != null) {
+                    productAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadProducts();
+    }
 
     public void loadProducts() {
+        productList.clear();
+        popularProductList.clear();
         db.collection("products")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -77,13 +146,14 @@ public class HomeFragment extends Fragment {
                                     );
                                     product.setPrice(document.getDouble("price").floatValue());
                                     productList.add(product);
+                                    popularProductList.add(product);
                                 } catch (Exception e) {
                                     Log.e(TAG, "loadProducts: " + e.getMessage());
                                 }
                             }
 
                             if(binding != null){// After loading data, set up the adapters
-                                popularProductAdapter = new PopularProductAdapter(productList);
+                                popularProductAdapter = new PopularProductAdapter(popularProductList);
                                 binding.rvPopularProductsList.setAdapter(popularProductAdapter);
 
                                 productAdapter = new ProductListAdapter(getContext(), productList);

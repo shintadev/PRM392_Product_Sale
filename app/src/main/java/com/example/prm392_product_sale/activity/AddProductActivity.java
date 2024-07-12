@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -90,6 +91,7 @@ public class AddProductActivity extends AppCompatActivity {
     }
 
     private void uploadImageAndSaveProduct() {
+        binding.addProductLoading.setVisibility(View.VISIBLE);
         if (imageUri != null) {
             StorageReference storageRef = storage.getReference();
             StorageReference imageRef = storageRef.child("images/" + UUID.randomUUID().toString());

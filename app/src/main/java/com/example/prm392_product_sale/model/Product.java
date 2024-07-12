@@ -1,6 +1,8 @@
 package com.example.prm392_product_sale.model;
 
-public class Product {
+import java.io.Serializable;
+
+public class Product implements Serializable {
     private String id;
     private String title;
     private String description;

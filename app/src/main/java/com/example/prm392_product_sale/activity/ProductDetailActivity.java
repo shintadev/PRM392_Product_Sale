@@ -1,6 +1,8 @@
 package com.example.prm392_product_sale.activity;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -10,20 +12,33 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.bumptech.glide.Glide;
 import com.example.prm392_product_sale.databinding.ActivityProductDetailBinding;
+import com.example.prm392_product_sale.model.CartManager;
+import com.example.prm392_product_sale.model.Product;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ProductDetailActivity extends AppCompatActivity {
 
-    private EditText quantity;
-    private final int min = 0;
+    private static final String TAG = "ProductDetailActivity";
+    private final int min = 1;
     private final int max = 10;
     ActivityProductDetailBinding binding;
+    private FirebaseFirestore db;
+    private FirebaseUser user;
+    private String productId;
+    private EditText quantity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityProductDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        db = FirebaseFirestore.getInstance();
 
         Toolbar toolbar = binding.tbProductDetail;
         setSupportActionBar(toolbar);
@@ -52,6 +67,53 @@ public class ProductDetailActivity extends AppCompatActivity {
                 setValue(value + 1);
             }
         });
+
+
+        loadProduct();
+    }
+
+    public void loadProduct() {
+        productId = getIntent().getStringExtra("productId");
+        db.collection("products")
+                .document(productId).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        Log.d(TAG, "loadProduct:success ");
+                        if (document.exists() && binding != null) {
+                            Glide.with(this)
+                                    .load(document.getString("url"))
+                                    .into(binding.ivDetailProduct);
+
+                            binding.tvProductTitle.setText(document.getString("title"));
+                            binding.tvProductPrice.setText(String.format("$%.2f", document.getDouble("price").floatValue()));
+                            binding.tvProductDescription.setText(document.getString("description"));
+                            binding.tvTotal.setText(String.format("$%.2f", getValue() * document.getDouble("price").floatValue()));
+
+                            Product product = document.toObject(Product.class);
+                            quantity.addTextChangedListener(new TextWatcher() {
+
+                                public void afterTextChanged(Editable s) {
+
+                                    binding.tvTotal.setText(String.format("$%.2f", getValue() * document.getDouble("price").floatValue()));
+                                }
+
+                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                }
+
+                                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                }
+                            });
+
+                            final Button buttonCheckout = binding.btnCheckout;
+                            buttonCheckout.setOnClickListener(v -> {
+                                user = FirebaseAuth.getInstance().getCurrentUser();
+                                CartManager cartManager = new CartManager(user.getUid(),this);
+                                cartManager.addToCart(product, getValue());
+                            });
+                        }
+                    } else Log.e(TAG, "loadProduct:failure", task.getException());
+                });
     }
 
     public int getValue() {

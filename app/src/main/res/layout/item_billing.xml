@@ -74,8 +74,9 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:inputType="number"
-            android:text="0"
-            android:textAlignment="center" />
+            android:text="x0"
+            android:textAlignment="center"
+            android:enabled="false"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

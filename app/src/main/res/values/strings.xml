@@ -20,5 +20,9 @@
     <string name="default_receiverId">0mC4FUdAg0WHXdsbkbmpQslvVK12</string>
     <string name="default_receiverName">ADMIN</string>
     <string name="google_map_api_key">AIzaSyDvyVpTGBqfVKzHKFBjAJaZPZUh1KoxxcU</string>
-
+    <string-array name="sort_options">
+        <item>Sort by Name</item>
+        <item>Sort by Price (Low to High)</item>
+        <item>Sort by Price (High to Low)</item>
+    </string-array>
 </resources>

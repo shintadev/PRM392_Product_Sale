@@ -64,8 +64,6 @@ public class AdminActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        loadTotalProducts();
-
         Toolbar toolbar = binding.adminToolbar;
         setSupportActionBar(toolbar);
 
@@ -80,6 +78,7 @@ public class AdminActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         loadProducts();
+        loadTotalProducts();
         adapter.notifyDataSetChanged();
     }
 
@@ -95,7 +94,7 @@ public class AdminActivity extends AppCompatActivity {
 
     public void loadTotalProducts() {
         TextView tvTotalProductsAdmin = binding.tvTotalProductsAdmin;
-        tvTotalProductsAdmin.setText(String.valueOf(productList.size()));
+        tvTotalProductsAdmin.setText(String.format("%d",adapter.getItemCount()));
     }
 
     public void loadProducts() {
@@ -125,6 +124,7 @@ public class AdminActivity extends AppCompatActivity {
 
                                 productList.add(product);
                             }
+                            loadTotalProducts();
                             adapter.notifyDataSetChanged();
                         }
                     }

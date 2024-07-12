@@ -1,9 +1,10 @@
 package com.example.prm392_product_sale.adapter;
 
-import android.net.Uri;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,15 +14,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.prm392_product_sale.R;
 import com.example.prm392_product_sale.model.CartItem;
+import com.example.prm392_product_sale.model.CartManager;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     private List<CartItem> items;
+    private Context context;
+    private CartUpdateListener cartUpdateListener;
+    private FirebaseUser user;
+    private CartManager cartManager;
 
-    public CartAdapter(List<CartItem> items) {
+    public CartAdapter(List<CartItem> items, Context context, CartUpdateListener cartUpdateListener) {
         this.items = items;
+        this.context = context;
+        this.cartUpdateListener = cartUpdateListener;
     }
 
     @NonNull
@@ -34,7 +44,44 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull CartAdapter.ViewHolder holder, int position) {
         CartItem item = items.get(position);
-        holder.bind(item);
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
+        cartManager = new CartManager(user.getUid(), context);
+
+        Picasso.get().load(item.getProduct().getUrl()).resize(90, 90).centerCrop().into(holder.ivProductCart);
+        holder.tvProductTitleCart.setText(item.getProduct().getTitle());
+        holder.tvProductPriceCart.setText(String.format("$%.2f", item.getProduct().getPrice()));
+        holder.tvProductTotalPriceCart.setText((String.format("$%.2f", item.getProduct().getPrice() * item.getQuantity())));
+        holder.etProductQuantityCart.setText(String.valueOf(item.getQuantity()));
+        holder.etProductQuantityCart.setEnabled(false);
+
+        holder.btnProductLessCart.setOnClickListener(v -> {
+            if (item.getQuantity() > 1) {
+                int newQuantity = item.getQuantity() - 1;
+                item.setQuantity(newQuantity);
+                holder.etProductQuantityCart.setText(String.valueOf(newQuantity));
+                cartManager.updateCartItemQuantity(item.getProduct().getId(), newQuantity);
+                holder.tvProductTotalPriceCart.setText(String.format("$%.2f", item.getProduct().getPrice() * newQuantity));
+                cartUpdateListener.onCartUpdated();
+            } else {
+                cartManager.removeCartItem(item.getProduct().getId());
+                items.remove(item);
+                notifyDataSetChanged();
+                cartUpdateListener.onCartUpdated();
+            }
+        });
+
+        holder.btnProductMoreCart.setOnClickListener(v -> {
+            if (item.getQuantity() < 10) {
+                int newQuantity = item.getQuantity() + 1;
+                item.setQuantity(newQuantity);
+                holder.etProductQuantityCart.setText(String.valueOf(newQuantity));
+                cartManager.updateCartItemQuantity(item.getProduct().getId(), newQuantity);
+                holder.tvProductTotalPriceCart.setText(String.format("$%.2f", item.getProduct().getPrice() * newQuantity));
+                cartUpdateListener.onCartUpdated();
+            }
+        });
     }
 
     @Override
@@ -43,27 +90,28 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView productImageView;
-        public TextView productTilleTextView;
-        public TextView productPriceTextView;;
-        public TextView productTotalPriceTextView;
-        public EditText productQuantityEditText;
+        public ImageView ivProductCart;
+        public TextView tvProductTitleCart, tvProductPriceCart, tvProductTotalPriceCart, tvTotalPrice;
+        public EditText etProductQuantityCart;
+        Button btnProductLessCart, btnProductMoreCart;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            productImageView = itemView.findViewById(R.id.iv_product_cart);
-            productTilleTextView = itemView.findViewById(R.id.tv_product_title_cart);
-            productPriceTextView = itemView.findViewById(R.id.tv_price_cart);
-            productTotalPriceTextView = itemView.findViewById(R.id.tv_total_price_cart);
-            productQuantityEditText = itemView.findViewById(R.id.et_product_quantity);
-        }
+            ivProductCart = itemView.findViewById(R.id.iv_product_cart);
+            tvProductTitleCart = itemView.findViewById(R.id.tv_product_title_cart);
+            tvProductPriceCart = itemView.findViewById(R.id.tv_price_cart);
+            tvProductTotalPriceCart = itemView.findViewById(R.id.tv_total_price_cart);
+            etProductQuantityCart = itemView.findViewById(R.id.et_product_quantity_cart);
+            btnProductLessCart = itemView.findViewById(R.id.btn_product_less_cart);
+            btnProductMoreCart = itemView.findViewById(R.id.btn_product_more_cart);
+            if (itemView.findViewById(R.id.tv_total) != null)
+                tvTotalPrice = itemView.findViewById(R.id.tv_total);
 
-        public void bind(CartItem item) {
-            Picasso.get().load(item.getProduct().getUrl()).resize(100, 100).centerCrop().into(productImageView);
-            productTilleTextView.setText(item.getProduct().getTitle());
-            productPriceTextView.setText("$" + String.format("%.2f", item.getProduct().getPrice()));
-            productTotalPriceTextView.setText((String.valueOf(item.getProduct().getPrice()*item.getQuantity())));
-            productQuantityEditText.setText(String.valueOf(item.getQuantity()));
         }
     }
+    public interface CartUpdateListener {
+        void onCartUpdated();
+    }
 }
+
+

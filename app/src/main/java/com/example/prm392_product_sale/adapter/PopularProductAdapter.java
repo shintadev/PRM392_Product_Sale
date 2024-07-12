@@ -11,17 +11,24 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.prm392_product_sale.R;
 import com.example.prm392_product_sale.activity.ProductDetailActivity;
 import com.example.prm392_product_sale.model.Product;
 
+import java.util.Collections;
 import java.util.List;
 
 public class PopularProductAdapter extends RecyclerView.Adapter<PopularProductAdapter.ViewHolder> {
     private List<Product> options;
 
-    public PopularProductAdapter(List<Product> options) {
-        this.options = options;
+    public PopularProductAdapter(@NonNull List<Product> options) {
+        Collections.shuffle(options);
+        if (options.size() > 10)
+            this.options = options.subList(0, 10);
+        else {
+            this.options = options;
+        }
     }
 
     @NonNull
@@ -34,12 +41,12 @@ public class PopularProductAdapter extends RecyclerView.Adapter<PopularProductAd
     @Override
     public void onBindViewHolder(@NonNull PopularProductAdapter.ViewHolder holder, int position) {
         Product product = options.get(position);
-//        Glide.with(holder.itemView)
-//                .load(product.getUrl())
-//                .into(holder.imageViewProduct);
+        Glide.with(holder.itemView)
+                .load(product.getUrl())
+                .into(holder.productImage);
         holder.title.setText(product.getTitle());
         holder.priceTxt.setText(String.valueOf(product.getPrice()));
-//        holder.oldPriceTxt.setText(String.valueOf(product.getOldPrice()));
+        holder.oldPriceTxt.setText(String.valueOf(product.getOldPrice()));
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), ProductDetailActivity.class);
