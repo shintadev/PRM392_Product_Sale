@@ -49,8 +49,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        Button buttonGetDirections = binding.btnGetDirections;
-        buttonGetDirections.setOnClickListener(v -> openGoogleMapsDirections(STORE_LOCATION));
+//        Button buttonGetDirections = binding.btnGetDirections;
+//        buttonGetDirections.setOnClickListener(v -> openGoogleMapsDirections(STORE_LOCATION));
     }
 
     @Override

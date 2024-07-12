@@ -1,5 +1,7 @@
 package com.example.prm392_product_sale.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,9 +15,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
+import com.example.prm392_product_sale.adapter.CartAdapter;
 import com.example.prm392_product_sale.databinding.ActivityProductDetailBinding;
 import com.example.prm392_product_sale.model.CartManager;
 import com.example.prm392_product_sale.model.Product;
+import com.example.prm392_product_sale.service.NotificationService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -29,6 +33,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     ActivityProductDetailBinding binding;
     private FirebaseFirestore db;
     private FirebaseUser user;
+    private CartManager cartManager;
     private String productId;
     private EditText quantity;
 
@@ -105,11 +110,13 @@ public class ProductDetailActivity extends AppCompatActivity {
                                 }
                             });
 
-                            final Button buttonCheckout = binding.btnCheckout;
-                            buttonCheckout.setOnClickListener(v -> {
+                            final Button buttonAddToCart = binding.btnAddToCart;
+                            buttonAddToCart.setOnClickListener(v -> {
                                 user = FirebaseAuth.getInstance().getCurrentUser();
-                                CartManager cartManager = new CartManager(user.getUid(),this);
-                                cartManager.addToCart(product, getValue());
+                                cartManager = new CartManager(user.getUid(),this);
+                                cartManager.addToCart(product, getValue(), () -> {
+                                    updateCartNotification(this);
+                                });
                             });
                         }
                     } else Log.e(TAG, "loadProduct:failure", task.getException());
@@ -132,6 +139,30 @@ public class ProductDetailActivity extends AppCompatActivity {
         if (quantity != null) {
             quantity.setText(String.valueOf(value));
         }
+    }
+
+    private void updateCartNotification(Context context) {
+        CartManager.FirestoreCallback callback = new CartManager.FirestoreCallback() {
+
+            @Override
+            public void onBooleanCallback(boolean exists) {
+
+            }
+
+            @Override
+            public void onIntCallback(int count) {
+                Intent serviceIntent = new Intent(context, NotificationService.class);
+                serviceIntent.putExtra("cartItemCount", count);
+                context.startService(serviceIntent);
+            }
+
+            @Override
+            public void onFloatCallback(float totalPrice) {
+
+            }
+        };
+
+        cartManager.getCartItemCount(callback);
     }
 
     @Override

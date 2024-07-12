@@ -1,6 +1,7 @@
 package com.example.prm392_product_sale.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.prm392_product_sale.R;
 import com.example.prm392_product_sale.model.CartItem;
 import com.example.prm392_product_sale.model.CartManager;
+import com.example.prm392_product_sale.service.NotificationService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
@@ -63,13 +65,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                 holder.etProductQuantityCart.setText(String.valueOf(newQuantity));
                 cartManager.updateCartItemQuantity(item.getProduct().getId(), newQuantity);
                 holder.tvProductTotalPriceCart.setText(String.format("$%.2f", item.getProduct().getPrice() * newQuantity));
-                cartUpdateListener.onCartUpdated();
             } else {
                 cartManager.removeCartItem(item.getProduct().getId());
                 items.remove(item);
                 notifyDataSetChanged();
-                cartUpdateListener.onCartUpdated();
             }
+            cartUpdateListener.onCartUpdated();
+            updateCartNotification(context);
         });
 
         holder.btnProductMoreCart.setOnClickListener(v -> {
@@ -80,6 +82,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                 cartManager.updateCartItemQuantity(item.getProduct().getId(), newQuantity);
                 holder.tvProductTotalPriceCart.setText(String.format("$%.2f", item.getProduct().getPrice() * newQuantity));
                 cartUpdateListener.onCartUpdated();
+                updateCartNotification(context);
             }
         });
     }
@@ -109,6 +112,31 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
         }
     }
+
+    private void updateCartNotification(Context context) {
+        CartManager.FirestoreCallback callback = new CartManager.FirestoreCallback() {
+
+            @Override
+            public void onBooleanCallback(boolean exists) {
+
+            }
+
+            @Override
+            public void onIntCallback(int count) {
+                Intent serviceIntent = new Intent(context, NotificationService.class);
+                serviceIntent.putExtra("cartItemCount", count);
+                context.startService(serviceIntent);
+            }
+
+            @Override
+            public void onFloatCallback(float totalPrice) {
+
+            }
+        };
+
+        cartManager.getCartItemCount(callback); // Implement a method to get the cart item count
+    }
+
     public interface CartUpdateListener {
         void onCartUpdated();
     }

@@ -25,18 +25,54 @@ public class CartManager {
         this.context = context;
     }
 
-    public void addToCart(Product product, int quantity) {
-        CartItem cartItem = new CartItem(product, quantity);
-        db.collection("users").document(userId)
-                .collection("cart").document(product.getId())
-                .set(cartItem)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(context, "Failed to add to cart", Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, "Failed to add to cart", e);
-                });
+    public void addToCart(Product product, int quantity, CartCallback callback) {
+        FirestoreCallback firestoreCallback  = new FirestoreCallback() {
+
+            @Override
+            public void onBooleanCallback(boolean exists) {
+                if (exists) {
+                    db.collection("users").document(userId)
+                            .collection("cart").document(product.getId())
+                            .get()
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    int currentQuantity = task.getResult().getLong("quantity").intValue();
+                                    task.getResult().getReference().update("quantity", quantity + currentQuantity);
+                                    Toast.makeText(context, "Updated cart item quantity", Toast.LENGTH_SHORT).show();
+                                    callback.onCartUpdated();
+                                } else {
+                                    Toast.makeText(context, "Failed to update cart item quantity", Toast.LENGTH_SHORT).show();
+                                    Log.e(TAG, "Failed to update cart item quantity", task.getException());
+                                }
+                            });
+                } else {
+                    CartItem cartItem = new CartItem(product, quantity);
+                    db.collection("users").document(userId)
+                            .collection("cart").document(product.getId())
+                            .set(cartItem)
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show();
+                                callback.onCartUpdated();
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(context, "Failed to add to cart", Toast.LENGTH_SHORT).show();
+                                Log.e(TAG, "Failed to add to cart", e);
+                            });
+                }
+            }
+
+            @Override
+            public void onIntCallback(int count) {
+
+            }
+
+            @Override
+            public void onFloatCallback(float totalPrice) {
+
+            }
+        };
+
+        isCartItemExists(product.getId(), firestoreCallback );
     }
 
     public void updateCartItemQuantity(String productId, int quantity) {
@@ -50,6 +86,7 @@ public class CartManager {
                     Toast.makeText(context, "Failed to update cart item quantity", Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "Failed to update cart item quantity", e);
                 });
+
     }
 
     public void removeCartItem(String productId) {
@@ -71,6 +108,36 @@ public class CartManager {
                 .addOnCompleteListener(onCompleteListener);
     }
 
+    public void isCartItemExists(String productId, FirestoreCallback callback) {
+        db.collection("users").document(userId)
+                .collection("cart").document(productId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        callback.onBooleanCallback(task.getResult().exists());
+                    } else {
+                        callback.onBooleanCallback(false);
+                    }
+                });
+    }
+
+    public void getCartItemCount(FirestoreCallback callback) {
+        db.collection("users").document(userId)
+                .collection("cart").get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        int count = 0;
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            CartItem cartItem = document.toObject(CartItem.class);
+                            count += cartItem.getQuantity();
+                        }
+                        callback.onIntCallback(count);
+                    } else {
+                        callback.onIntCallback(0);
+                    }
+                });
+    }
+
     public float getTotalPrice() {
         final float[] total = {0};
         db.collection("users").document(userId)
@@ -87,5 +154,17 @@ public class CartManager {
                 });
 
         return total[0];
+    }
+
+    public interface FirestoreCallback {
+        void onBooleanCallback(boolean exists);
+
+        void onIntCallback(int count);
+
+        void onFloatCallback(float totalPrice);
+    }
+
+    public interface CartCallback {
+        void onCartUpdated();
     }
 }

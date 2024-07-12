@@ -31,8 +31,6 @@ import java.util.List;
 public class CartFragment extends Fragment implements CartAdapter.CartUpdateListener {
 
     private  String TAG = "CartFragment";
-    private static final String CHANNEL_ID = "cart_channel";
-    private static final int NOTIFICATION_ID = 1;
     FirebaseAuth mAuth;
     RecyclerView rvCart;
     private CartAdapter cartAdapter;
@@ -111,17 +109,6 @@ public class CartFragment extends Fragment implements CartAdapter.CartUpdateList
                 Log.e(TAG, "loadCartItems:failed", task.getException());
             }
         });
-
-//        if( adapter.getItemCount()<1){
-//            TextView textView = binding.tvEmptyCart;
-//            cartViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-//        }else {
-//            TextView textView = binding.tvEmptyCart;
-//            cartViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-//        }
-
-
-
     }
 
     @Override
@@ -129,19 +116,4 @@ public class CartFragment extends Fragment implements CartAdapter.CartUpdateList
         super.onDestroyView();
         binding = null;
     }
-
-//    public void updateCartBadge(int cartCount) {
-//        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getContext(), CHANNEL_ID)
-//                .setContentTitle("Cart")
-//                .setContentText(String.valueOf(cartCount))
-//                .setSmallIcon(R.drawable.ic_cart_black_24dp)
-//                .setAutoCancel(true);
-//
-//        NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(NOTIFICATION_SERVICE);
-//        if (cartCount > 0) {
-//            notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
-//        } else {
-//            notificationManager.cancel(NOTIFICATION_ID);
-//        }
-//    }
 }

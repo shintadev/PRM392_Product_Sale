@@ -184,7 +184,7 @@
             app:layout_constraintTop_toTopOf="@id/v_cart_bottom_bar" />
 
         <Button
-            android:id="@+id/btn_checkout"
+            android:id="@+id/btn_add_to_cart"
             android:layout_width="160dp"
             android:layout_height="76dp"
             android:layout_margin="0dp"
