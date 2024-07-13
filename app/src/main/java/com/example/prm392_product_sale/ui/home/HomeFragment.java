@@ -16,10 +16,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.prm392_product_sale.R;
 import com.example.prm392_product_sale.activity.MainActivity;
-import com.example.prm392_product_sale.adapter.PopularProductAdapter;
+import com.example.prm392_product_sale.adapter.BannerAdapter;
 import com.example.prm392_product_sale.adapter.ProductListAdapter;
 import com.example.prm392_product_sale.databinding.FragmentHomeBinding;
 import com.example.prm392_product_sale.model.Product;
@@ -28,6 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,10 +38,10 @@ public class HomeFragment extends Fragment {
 
     private static final String TAG = "HomeFragment";
     private FirebaseFirestore db;
-    private List<Product> productList, popularProductList;
+    private List<Product> productList;
     private FragmentHomeBinding binding;
-    private PopularProductAdapter popularProductAdapter;
     private ProductListAdapter productAdapter;
+    private BannerAdapter bannerAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -51,17 +53,14 @@ public class HomeFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
 
-        RecyclerView rvPopularProducts = binding.rvPopularProductsList;
-        rvPopularProducts.setLayoutManager(new LinearLayoutManager(getContext(),
-                LinearLayoutManager.HORIZONTAL, false));
+
 
         RecyclerView rvProductsList = binding.rvProductList;
         rvProductsList.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         // Initialize the product list
         productList = new ArrayList<>();
-        popularProductList = new ArrayList<>();
-
+        loadBanners();
         return root;
     }
     @Override
@@ -126,9 +125,18 @@ public class HomeFragment extends Fragment {
         loadProducts();
     }
 
+    private void loadBanners() {
+        List<String> bannerUrls = new ArrayList<>(Arrays.asList(
+                "https://firebasestorage.googleapis.com/v0/b/project175-f1c13.appspot.com/o/banner1.png?alt=media&token=6cb7ba57-4cd5-434a-b668-b1c1c0237fb3",
+                "https://firebasestorage.googleapis.com/v0/b/project175-f1c13.appspot.com/o/banner2.png?alt=media&token=2c2a98de-2240-4130-8a89-7fbe7e49fa21"
+        ));
+        bannerAdapter = new BannerAdapter(bannerUrls);
+        ViewPager2 viewPager = binding.viewPager2;
+        viewPager.setAdapter(bannerAdapter);
+    }
+
     public void loadProducts() {
         productList.clear();
-        popularProductList.clear();
         db.collection("products")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -146,19 +154,15 @@ public class HomeFragment extends Fragment {
                                     );
                                     product.setPrice(document.getDouble("price").floatValue());
                                     productList.add(product);
-                                    popularProductList.add(product);
                                 } catch (Exception e) {
                                     Log.e(TAG, "loadProducts: " + e.getMessage());
                                 }
                             }
 
                             if(binding != null){// After loading data, set up the adapters
-                                popularProductAdapter = new PopularProductAdapter(popularProductList);
-                                binding.rvPopularProductsList.setAdapter(popularProductAdapter);
 
                                 productAdapter = new ProductListAdapter(getContext(), productList);
                                 binding.rvProductList.setAdapter(productAdapter);
-                                binding.pbPopularProducts.setVisibility(View.GONE);
                                 binding.pbProductList.setVisibility(View.GONE);
                             }
                         }
