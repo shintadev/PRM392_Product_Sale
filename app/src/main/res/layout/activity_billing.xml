@@ -17,24 +17,23 @@
         app:layout_constraintTop_toTopOf="parent"
         app:titleTextColor="@color/white" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tb_billing">
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_billing"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="16dp" />
+            android:layout_height="0dp"
+            app:layout_constraintVertical_weight="1"
+            android:layout_margin="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tb_billing"
+            app:layout_constraintBottom_toTopOf="@id/cl_total_billing"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_total_billing"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_margin="16dp">
+            android:layout_margin="16dp"
+            app:layout_constraintBottom_toTopOf="@id/btn_checkout_billing">
 
             <TextView
                 android:id="@+id/tv_subtotal"
@@ -48,6 +47,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:id="@+id/tv_subtotal_billing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="$"
@@ -67,9 +67,10 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_subtotal" />
+                app:layout_constraintTop_toBottomOf="@id/tv_subtotal" />
 
             <TextView
+                android:id="@+id/tv_fee_delivery_billing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -78,21 +79,21 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_subtotal" />
+                app:layout_constraintTop_toBottomOf="@id/tv_subtotal" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Tax"
+                android:text="Tax (10%)"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_fee_delivery" />
+                app:layout_constraintTop_toBottomOf="@id/tv_fee_delivery" />
 
             <TextView
-                android:id="@+id/tv_tax"
+                android:id="@+id/tv_tax_billing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -101,7 +102,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_fee_delivery" />
+                app:layout_constraintTop_toBottomOf="@id/tv_fee_delivery" />
 
             <View
                 android:layout_width="wrap_content"
@@ -110,7 +111,7 @@
                 android:background="#D2D2D2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_tax" />
+                app:layout_constraintTop_toBottomOf="@id/tv_tax_billing" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -121,9 +122,10 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_tax" />
+                app:layout_constraintTop_toBottomOf="@id/tv_tax_billing" />
 
             <TextView
+                android:id="@+id/tv_total_billing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
@@ -132,9 +134,8 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_tax" />
+                app:layout_constraintTop_toBottomOf="@id/tv_tax_billing" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </LinearLayout>
 
     <Button
         android:id="@+id/btn_checkout_billing"

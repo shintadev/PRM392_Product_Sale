@@ -57,8 +57,8 @@ public class ProfileOptionAdapter extends RecyclerView.Adapter<ProfileOptionAdap
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            optionIcon = itemView.findViewById(R.id.option_icon);
-            optionText = itemView.findViewById(R.id.option_text);
+            optionIcon = itemView.findViewById(R.id.iv_option_icon);
+            optionText = itemView.findViewById(R.id.tv_option_text);
         }
     }
 }

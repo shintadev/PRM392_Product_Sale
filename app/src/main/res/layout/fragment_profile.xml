@@ -48,23 +48,30 @@
                 app:layout_constraintLeft_toRightOf="@id/iv_profile_image"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <Button
+<!--                <Button-->
+<!--                    android:id="@+id/btn_login"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Login"-->
+<!--                    android:textAllCaps="false" />-->
+
+                <com.google.android.gms.common.SignInButton
                     android:id="@+id/btn_login"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Login"
-                    android:textAllCaps="false" />
+                    android:layout_centerInParent="true"/>
 
             </LinearLayout>
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/ll_after_login"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_weight="1"
-                android:orientation="vertical"
                 android:paddingStart="32dp"
+                android:paddingEnd="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/iv_profile_image"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:visibility="invisible">
 
@@ -76,17 +83,23 @@
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:text="Name"
-                    android:textAllCaps="false" />
+                    android:textAllCaps="false"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
-                <TextView
-                    android:id="@+id/tv_profile_email"
+
+                <Button
+                    android:id="@+id/btn_logout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="8dp"
-                    android:text="Email"
-                    android:textAllCaps="false" />
+                    android:text="Log Out"
+                    android:textAllCaps="false"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
