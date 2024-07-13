@@ -92,7 +92,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
                             binding.tvProductTitle.setText(document.getString("title"));
                             binding.tvProductPrice.setText(String.format("$%.2f", document.getDouble("price").floatValue()));
-                            binding.tvProductDescription.setText(document.getString("description"));
+                            binding.tvProductDescriptionContent.setText(document.getString("description"));
                             binding.tvTotal.setText(String.format("$%.2f", getValue() * document.getDouble("price").floatValue()));
 
                             Product product = document.toObject(Product.class);
