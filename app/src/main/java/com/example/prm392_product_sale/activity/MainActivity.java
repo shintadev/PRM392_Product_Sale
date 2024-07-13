@@ -58,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         currentUsername = null;
         isAdmin = false;
 
+        cartManager = new CartManager(null, this);
+
         if (mAuth.getCurrentUser() != null) {
             loadCurrentUser();
         } else {
@@ -99,7 +101,9 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
     @Override
     protected void onResume() {
         super.onResume();
-        updateCartNotification(this);
+        if (currentUid != null) {
+            updateCartNotification(this);
+        }
     }
 
     @Override
@@ -111,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
     @Override
     protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
-            navigateToCartFragment();
+        navigateToCartFragment();
     }
 
     private void navigateToCartFragment() {
@@ -119,11 +123,10 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         navController.navigate(R.id.navigation_cart);
     }
 
-
     private void loadCurrentUser() {
         if (mAuth.getCurrentUser() == null) return;
         currentUid = mAuth.getCurrentUser().getUid();
-        cartManager = new CartManager(currentUid,this);
+        cartManager = new CartManager(currentUid, this);
 
         db.collection("users")
                 .document(currentUid).get()
@@ -150,16 +153,17 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                             });
                         }
                         updateCartNotification(this);
-                    } else Log.w(TAG, "loadCurrentUser:failure", task.getException());
+                    } else {
+                        Log.w(TAG, "loadCurrentUser:failure", task.getException());
+                    }
                 });
     }
 
     private void updateCartNotification(Context context) {
         CartManager.FirestoreCallback callback = new CartManager.FirestoreCallback() {
-
             @Override
             public void onBooleanCallback(boolean exists) {
-
+                // Handle boolean callback
             }
 
             @Override
@@ -171,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
 
             @Override
             public void onFloatCallback(float totalPrice) {
-
+                // Handle float callback
             }
         };
 
