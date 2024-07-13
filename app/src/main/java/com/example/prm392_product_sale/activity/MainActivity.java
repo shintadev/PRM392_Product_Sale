@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
     private boolean isAdmin;
     private CartManager cartManager;
     private ActivityMainBinding binding;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
 
         // Set up the bottom navigation view
         BottomNavigationView navView = binding.navView;
+        navView.setItemIconTintList(ContextCompat.getColorStateList(this, R.color.grey_dark));
+        navView.setItemTextColor(ContextCompat.getColorStateList(this, R.color.grey_dark));
 
         // Configure the AppBarConfiguration with the top level destinations
         AppBarConfiguration appBarConfiguration
