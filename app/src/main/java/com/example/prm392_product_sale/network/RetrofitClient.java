@@ -4,20 +4,15 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
-    private static Retrofit retrofit;
-    private static final String BASE_URL = "https://api.example.com/";
+    private static Retrofit retrofit = null;
 
-    public static Retrofit getRetrofitInstance() {
+    public static Retrofit getClient() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl("https://65e9f387c9bf92ae3d3ab73b.mockapi.io/duybao/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
         return retrofit;
-    }
-
-    public static ApiService getApiService() {
-        return getRetrofitInstance().create(ApiService.class);
     }
 }
