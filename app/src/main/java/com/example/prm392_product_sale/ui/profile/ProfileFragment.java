@@ -37,6 +37,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -204,7 +205,7 @@ public class ProfileFragment extends Fragment {
             ImageView profileImage = binding.ivProfileImage;
             TextView name = binding.tvProfileName;
 
-            profileImage.setImageURI(currentUser.getPhotoUrl());
+            Picasso.get().load(currentUser.getPhotoUrl()).into(profileImage);
             name.setText(currentUser.getDisplayName());
         }
     }

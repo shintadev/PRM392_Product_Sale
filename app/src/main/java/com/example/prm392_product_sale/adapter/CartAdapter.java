@@ -51,7 +51,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         assert user != null;
         cartManager = new CartManager(user.getUid(), context);
 
-        Picasso.get().load(item.getProduct().getUrl()).resize(90, 90).centerCrop().into(holder.ivProductCart);
+        Picasso.get().load(item.getProduct().getUrl()).into(holder.ivProductCart);
         holder.tvProductTitleCart.setText(item.getProduct().getTitle());
         holder.tvProductPriceCart.setText(String.format("$%.2f", item.getProduct().getPrice()));
         holder.tvProductTotalPriceCart.setText((String.format("$%.2f", item.getProduct().getPrice() * item.getQuantity())));

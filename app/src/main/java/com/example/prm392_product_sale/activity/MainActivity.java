@@ -95,6 +95,11 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         // Find the NavController and set up navigation
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupWithNavController(navView, navController);
+
+        if (currentUid != null) {
+            updateCartNotification(this);
+        }
+
     }
 
     @Override
@@ -105,9 +110,6 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
     @Override
     protected void onResume() {
         super.onResume();
-        if (currentUid != null) {
-            updateCartNotification(this);
-        }
     }
 
     @Override

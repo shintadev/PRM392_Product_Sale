@@ -44,7 +44,7 @@ public class BillingAdapter extends RecyclerView.Adapter<BillingAdapter.ViewHold
         user = FirebaseAuth.getInstance().getCurrentUser();
         assert user != null;
 
-        Picasso.get().load(item.getProduct().getUrl()).resize(90, 90).centerCrop().into(holder.ivProductBilling);
+        Picasso.get().load(item.getProduct().getUrl()).into(holder.ivProductBilling);
         holder.tvProductTitleBilling.setText(item.getProduct().getTitle());
         holder.tvProductPriceBilling.setText(String.format("$%.2f", item.getProduct().getPrice()));
         holder.tvProductTotalPriceBilling.setText((String.format("$%.2f", item.getProduct().getPrice() * item.getQuantity())));

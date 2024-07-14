@@ -53,8 +53,6 @@ public class HomeFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
 
-
-
         RecyclerView rvProductsList = binding.rvProductList;
         rvProductsList.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
@@ -117,12 +115,13 @@ public class HomeFragment extends Fragment {
                 // Do nothing
             }
         });
+        loadProducts();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        loadProducts();
+//        loadProducts();
     }
 
     private void loadBanners() {
@@ -137,6 +136,7 @@ public class HomeFragment extends Fragment {
 
     public void loadProducts() {
         productList.clear();
+        binding.pbProductList.setVisibility(View.VISIBLE);
         db.collection("products")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -163,7 +163,7 @@ public class HomeFragment extends Fragment {
 
                                 productAdapter = new ProductListAdapter(getContext(), productList);
                                 binding.rvProductList.setAdapter(productAdapter);
-                                binding.pbProductList.setVisibility(View.GONE);
+                                binding.pbProductList.setVisibility(View.INVISIBLE);
                             }
                         }
                     } else {
