@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -45,9 +44,6 @@ public class CartFragment extends Fragment implements CartAdapter.CartUpdateList
 
         binding = FragmentCartBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-        CartViewModel cartViewModel =
-                new ViewModelProvider(this).get(CartViewModel.class);
 
         mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() == null) {
@@ -93,17 +89,23 @@ public class CartFragment extends Fragment implements CartAdapter.CartUpdateList
     public void loadCartItems() {
         cartManager.getCartItems(task -> {
             if (task.isSuccessful()) {
-                cartItemList.clear();
-                float total = 0.0f;
-                for (DocumentSnapshot document : task.getResult()) {
-                    CartItem cartItem = document.toObject(CartItem.class);
-                    if (cartItem != null) {
-                        cartItemList.add(cartItem);
-                        total += cartItem.getProduct().getPrice() * cartItem.getQuantity();
+                if (task.getResult().size() == 0) {
+                    binding.tvEmptyCart.setText(("The Cart is Empty"));
+                    binding.tvEmptyCart.setVisibility(View.VISIBLE);
+                } else {
+                    cartItemList.clear();
+                    float total = 0.0f;
+                    for (DocumentSnapshot document : task.getResult()) {
+                        CartItem cartItem = document.toObject(CartItem.class);
+                        if (cartItem != null) {
+                            cartItemList.add(cartItem);
+                            total += cartItem.getProduct().getPrice() * cartItem.getQuantity();
+                        }
                     }
+                    cartAdapter.notifyDataSetChanged();
+                    tvTotalPrice.setText(String.format("Total: %.2f$", total));
                 }
-                cartAdapter.notifyDataSetChanged();
-                tvTotalPrice.setText(String.format("Total: %.2f$", total));
+                binding.pbCart.setVisibility(View.INVISIBLE);
             } else {
                 Log.e(TAG, "loadCartItems:failed", task.getException());
             }

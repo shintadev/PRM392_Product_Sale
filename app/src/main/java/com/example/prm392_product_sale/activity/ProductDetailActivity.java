@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -24,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 public class ProductDetailActivity extends AppCompatActivity {
 
@@ -86,9 +88,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                         DocumentSnapshot document = task.getResult();
                         Log.d(TAG, "loadProduct:success ");
                         if (document.exists() && binding != null) {
-                            Glide.with(this)
-                                    .load(document.getString("url"))
-                                    .into(binding.ivDetailProduct);
+                            Glide.with(this).load(document.getString("url")).into(binding.ivDetailProduct);
 
                             binding.tvProductTitle.setText(document.getString("title"));
                             binding.tvProductPrice.setText(String.format("$%.2f", document.getDouble("price").floatValue()));
@@ -118,6 +118,9 @@ public class ProductDetailActivity extends AppCompatActivity {
                                     updateCartNotification(this);
                                 });
                             });
+
+                            binding.pbProductDetail.setVisibility(View.GONE);
+                            binding.svProductDetail.setVisibility(View.VISIBLE);
                         }
                     } else Log.e(TAG, "loadProduct:failure", task.getException());
                 });
