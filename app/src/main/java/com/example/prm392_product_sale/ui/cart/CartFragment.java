@@ -30,13 +30,13 @@ import java.util.List;
 
 public class CartFragment extends Fragment implements CartAdapter.CartUpdateListener {
 
-    private  String TAG = "CartFragment";
     FirebaseAuth mAuth;
     RecyclerView rvCart;
+    TextView tvTotalPrice;
+    private String TAG = "CartFragment";
     private CartAdapter cartAdapter;
     private List<CartItem> cartItemList;
     private CartManager cartManager;
-    TextView tvTotalPrice;
     private Button btnCheckout;
     private FragmentCartBinding binding;
 
@@ -53,9 +53,9 @@ public class CartFragment extends Fragment implements CartAdapter.CartUpdateList
         if (mAuth.getCurrentUser() == null) {
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             startActivity(intent);
-        }
-        if (getActivity() != null) {
+        } else if (getActivity() != null) {
             cartManager = new CartManager(mAuth.getCurrentUser().getUid(), getActivity());
+            loadCartItems();
         }
 
         rvCart = binding.rvCart;
@@ -63,7 +63,7 @@ public class CartFragment extends Fragment implements CartAdapter.CartUpdateList
         tvTotalPrice = binding.tvTotal;
 
         cartItemList = new ArrayList<>();
-        cartAdapter = new CartAdapter(cartItemList,getContext(), this);
+        cartAdapter = new CartAdapter(cartItemList, getContext(), this);
         rvCart.setLayoutManager(new LinearLayoutManager(getContext()));
         rvCart.setAdapter(cartAdapter);
 
@@ -71,11 +71,10 @@ public class CartFragment extends Fragment implements CartAdapter.CartUpdateList
         btnCheckout.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity(), BillingActivity.class);
             intent.putExtra("cartItemList", (Serializable) cartItemList);
-            intent.putExtra("totalPrice", tvTotalPrice.getText().toString().substring(7, tvTotalPrice.length()-1));
+            intent.putExtra("totalPrice", tvTotalPrice.getText().toString().substring(7, tvTotalPrice.length() - 1));
             startActivity(intent);
         });
 
-        loadCartItems();
 
         return root;
     }
