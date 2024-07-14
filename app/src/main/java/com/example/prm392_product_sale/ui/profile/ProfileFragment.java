@@ -164,8 +164,8 @@ public class ProfileFragment extends Fragment {
                             } else {
                                 Intent chatIntent = new Intent(this.getContext(), MainActivity.class);
                                 startActivity(chatIntent);
+                                getActivity().finish();
                             }
-                            getActivity().finish();
                         } else {
                             createUser(userId);
                         }
