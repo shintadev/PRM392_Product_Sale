@@ -18,6 +18,7 @@ import com.example.prm392_product_sale.activity.ProductDetailActivity;
 import com.example.prm392_product_sale.model.Product;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+import com.squareup.picasso.Picasso;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -27,8 +28,6 @@ import javax.annotation.Nonnull;
 
 public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder> {
 
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    FirebaseStorage storage = FirebaseStorage.getInstance();
     private Context context;
     private List<Product> productList;
 
@@ -48,26 +47,16 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     public void onBindViewHolder(@Nonnull ProductListAdapter.ProductListViewHolder holder, int position) {
         Product product = productList.get(position);
         holder.tvTitle.setText(product.getTitle());
-        holder.tvPrice.setText("$" + product.getPrice());
-        holder.tvOldPrice.setText("$" + product.getOldPrice());
+        holder.tvPrice.setText("$" + String.format("%.2f", product.getPrice()));
+        holder.tvOldPrice.setText("$" + String.format("%.2f", product.getOldPrice()));
         holder.tvOldPrice.setPaintFlags(holder.tvTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-
-        Glide.with(context)
-                .load(product.getUrl())
-                .into(holder.ivProduct);
+        Picasso.get().load(product.getUrl()).centerCrop().fit().into(holder.ivProduct);
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ProductDetailActivity.class);
             intent.putExtra("productId", product.getId());
             context.startActivity(intent);
         });
-    }
-
-    private void removeProduct(Product product) {
-        db.collection("products").document(String.valueOf(product.getId())).delete();
-        storage.getReferenceFromUrl(product.getUrl()).delete();
-
-        Toast.makeText(context, "Product deleted", Toast.LENGTH_SHORT).show();
     }
 
     @Override

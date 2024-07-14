@@ -18,7 +18,7 @@ public class Product implements Serializable {
         this.description = description;
         this.url = url;
         this.oldPrice = oldPrice;
-        this.price = oldPrice*0.9f;
+        this.price = (oldPrice*0.9f);
     }
     public Product(String id, String title,String description, String url, float oldPrice) {
         this.id = id;

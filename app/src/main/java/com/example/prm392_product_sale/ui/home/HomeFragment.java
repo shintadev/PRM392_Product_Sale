@@ -53,8 +53,6 @@ public class HomeFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
 
-
-
         RecyclerView rvProductsList = binding.rvProductList;
         rvProductsList.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
@@ -117,12 +115,13 @@ public class HomeFragment extends Fragment {
                 // Do nothing
             }
         });
+        loadProducts();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        loadProducts();
+//        loadProducts();
     }
 
     private void loadBanners() {

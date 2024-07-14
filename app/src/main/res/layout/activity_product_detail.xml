@@ -183,7 +183,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/v_cart_bottom_bar"
-            app:layout_constraintEnd_toStartOf="@id/btn_checkout"
+            app:layout_constraintEnd_toStartOf="@id/btn_add_to_cart"
             app:layout_constraintTop_toTopOf="@id/v_cart_bottom_bar" />
 
         <Button
