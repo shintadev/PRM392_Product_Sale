@@ -21,9 +21,13 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.prm392_product_sale.R;
 import com.example.prm392_product_sale.activity.MainActivity;
 import com.example.prm392_product_sale.adapter.BannerAdapter;
+import com.example.prm392_product_sale.adapter.CategoryAdapter;
 import com.example.prm392_product_sale.adapter.ProductListAdapter;
 import com.example.prm392_product_sale.databinding.FragmentHomeBinding;
+import com.example.prm392_product_sale.model.Category;
 import com.example.prm392_product_sale.model.Product;
+import com.example.prm392_product_sale.network.ApiService;
+import com.example.prm392_product_sale.network.RetrofitClient;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -34,6 +38,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class HomeFragment extends Fragment {
 
     private static final String TAG = "HomeFragment";
@@ -42,6 +50,7 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private ProductListAdapter productAdapter;
     private BannerAdapter bannerAdapter;
+    private CategoryAdapter categoryAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -55,12 +64,17 @@ public class HomeFragment extends Fragment {
 
         RecyclerView rvProductsList = binding.rvProductList;
         rvProductsList.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        categoryAdapter = new CategoryAdapter(new ArrayList<>());
+        binding.recyclerCategories.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        binding.recyclerCategories.setAdapter(categoryAdapter);
 
         // Initialize the product list
         productList = new ArrayList<>();
         loadBanners();
+        loadCategories();
         return root;
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -134,6 +148,33 @@ public class HomeFragment extends Fragment {
         viewPager.setAdapter(bannerAdapter);
     }
 
+private void loadCategories() {
+    ApiService categoryService = RetrofitClient.getClient().create(ApiService.class);
+    Call<List<Category>> call = categoryService.getCategories();
+    call.enqueue(new Callback<List<Category>>() {
+        @Override
+        public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
+            if (response.isSuccessful()) {
+                List<Category> categories = response.body();
+                if (categories != null) {
+                    binding.progressBarOfficial.setVisibility(View.GONE);
+                    categoryAdapter.setCategories(categories);
+                    categoryAdapter.notifyDataSetChanged();
+                } else {
+                    Log.e("MainActivity", "Categories are null");
+                }
+            } else {
+                Log.e("MainActivity", "Response not successful: " + response.message());
+            }
+        }
+
+        @Override
+        public void onFailure(Call<List<Category>> call, Throwable t) {
+            Log.e("MainActivity", "API call failed: " + t.getMessage());
+        }
+    });
+}
+
     public void loadProducts() {
         productList.clear();
         binding.pbProductList.setVisibility(View.VISIBLE);
@@ -159,7 +200,7 @@ public class HomeFragment extends Fragment {
                                 }
                             }
 
-                            if(binding != null){// After loading data, set up the adapters
+                            if (binding != null) {// After loading data, set up the adapters
 
                                 productAdapter = new ProductListAdapter(getContext(), productList);
                                 binding.rvProductList.setAdapter(productAdapter);

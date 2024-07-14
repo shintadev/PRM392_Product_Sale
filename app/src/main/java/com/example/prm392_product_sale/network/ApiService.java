@@ -1,5 +1,6 @@
 package com.example.prm392_product_sale.network;
 
+import com.example.prm392_product_sale.model.Category;
 import com.example.prm392_product_sale.model.Product;
 import com.example.prm392_product_sale.model.User;
 
@@ -14,4 +15,7 @@ public interface ApiService {
 
     @GET("api/products")
     Call<List<Product>> getProducts();
+
+    @GET("category")
+    Call<List<Category>> getCategories();
 }
