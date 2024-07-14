@@ -52,7 +52,6 @@ public class HomeFragment extends Fragment {
     private BannerAdapter bannerAdapter;
     private CategoryAdapter categoryAdapter;
 
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
@@ -63,12 +62,11 @@ public class HomeFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
 
+        RecyclerView rvProductsList = binding.rvProductList;
+        rvProductsList.setLayoutManager(new GridLayoutManager(getContext(), 2));
         categoryAdapter = new CategoryAdapter(new ArrayList<>());
         binding.recyclerCategories.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         binding.recyclerCategories.setAdapter(categoryAdapter);
-
-        RecyclerView rvProductsList = binding.rvProductList;
-        rvProductsList.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         // Initialize the product list
         productList = new ArrayList<>();
@@ -76,6 +74,7 @@ public class HomeFragment extends Fragment {
         loadCategories();
         return root;
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -130,14 +129,14 @@ public class HomeFragment extends Fragment {
                 // Do nothing
             }
         });
+        loadProducts();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        loadProducts();
+//        loadProducts();
     }
-
 
     private void loadBanners() {
         List<String> bannerUrls = new ArrayList<>(Arrays.asList(
@@ -149,36 +148,36 @@ public class HomeFragment extends Fragment {
         viewPager.setAdapter(bannerAdapter);
     }
 
-    private void loadCategories() {
-        ApiService categoryService = RetrofitClient.getClient().create(ApiService.class);
-        Call<List<Category>> call = categoryService.getCategories();
-
-        call.enqueue(new Callback<List<Category>>() {
-            @Override
-            public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
-                if (response.isSuccessful()) {
-                    List<Category> categories = response.body();
-                    if (categories != null) {
-                        categoryAdapter.setCategories(categories);
-                        categoryAdapter.notifyDataSetChanged();
-                        binding.progressBarOfficial.setVisibility(View.GONE);
-                    } else {
-                        Log.e("MainActivity", "Categories are null");
-                    }
+private void loadCategories() {
+    ApiService categoryService = RetrofitClient.getClient().create(ApiService.class);
+    Call<List<Category>> call = categoryService.getCategories();
+    call.enqueue(new Callback<List<Category>>() {
+        @Override
+        public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
+            if (response.isSuccessful()) {
+                List<Category> categories = response.body();
+                if (categories != null) {
+                    binding.progressBarOfficial.setVisibility(View.GONE);
+                    categoryAdapter.setCategories(categories);
+                    categoryAdapter.notifyDataSetChanged();
                 } else {
-                    Log.e("MainActivity", "Response not successful: " + response.message());
+                    Log.e("MainActivity", "Categories are null");
                 }
+            } else {
+                Log.e("MainActivity", "Response not successful: " + response.message());
             }
+        }
 
-            @Override
-            public void onFailure(Call<List<Category>> call, Throwable t) {
-                Log.e("MainActivity", "API call failed: " + t.getMessage());
-            }
-        });
-    }
+        @Override
+        public void onFailure(Call<List<Category>> call, Throwable t) {
+            Log.e("MainActivity", "API call failed: " + t.getMessage());
+        }
+    });
+}
 
     public void loadProducts() {
         productList.clear();
+        binding.pbProductList.setVisibility(View.VISIBLE);
         db.collection("products")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -201,11 +200,11 @@ public class HomeFragment extends Fragment {
                                 }
                             }
 
-                            if(binding != null){// After loading data, set up the adapters
+                            if (binding != null) {// After loading data, set up the adapters
 
                                 productAdapter = new ProductListAdapter(getContext(), productList);
                                 binding.rvProductList.setAdapter(productAdapter);
-                                binding.pbProductList.setVisibility(View.GONE);
+                                binding.pbProductList.setVisibility(View.INVISIBLE);
                             }
                         }
                     } else {
