@@ -6,61 +6,79 @@
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="8dp"
-        android:background="@drawable/item_background"
+        android:layout_width="160dp"
+        android:layout_height="245dp"
+        android:layout_marginEnd="24dp"
+        android:layout_margin="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/gray_background"
         android:elevation="3dp">
 
-        <com.example.prm392_product_sale.ui.layout.SquareFrameLayout
-            android:id="@+id/fl_product"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" >
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/iv_product"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="4dp"
-                android:src="@drawable/ic_person_black_24dp"/>
-        </com.example.prm392_product_sale.ui.layout.SquareFrameLayout>
 
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_product"
+            android:layout_width="140dp"
+            android:layout_height="155dp"
+
+            android:layout_margin="4dp"
+            android:layout_marginTop="4dp"
+            android:src="@drawable/iphone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.533"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <View
             android:id="@+id/view"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:background="@color/material_dynamic_neutral95"
+            android:background="@drawable/white_background"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fl_product" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_product" />
 
         <TextView
             android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
+            android:layout_marginEnd="8dp"
             android:lines="2"
             android:maxLines="2"
             android:text="Title"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/view"
-            app:layout_constraintTop_toTopOf="@+id/view" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/ratingBar"
+            app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            style="@android:style/Widget.Material.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:indeterminate="false"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:progressTint="#ffc106"
+            android:rating="3"
+            android:stepSize="0.1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_product" />
 
         <TextView
             android:id="@+id/tv_old_price"
             android:layout_width="48dp"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
             android:maxLines="1"
             android:text="$100"
-            android:textColor="@color/black"
-            android:ellipsize="end"
+            android:textColor="@color/grey_dark"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@id/view"
             app:layout_constraintStart_toStartOf="@id/tv_title"
@@ -72,16 +90,51 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="4dp"
-            android:maxLines="1"
-            android:textAlignment="textEnd"
-            android:text="$80"
-            android:textColor="@color/black"
-            android:textSize="14sp"
             android:ellipsize="end"
+            android:maxLines="1"
+            android:text="$80"
+            android:textAlignment="textStart"
+            android:textColor="@color/green"
+            android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@id/view"
             app:layout_constraintEnd_toEndOf="@id/view"
-            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/tv_old_price"
-            app:layout_constraintTop_toTopOf="@+id/tv_old_price" />
+            app:layout_constraintTop_toTopOf="@+id/tv_old_price"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <TextView
+            android:id="@+id/ratingTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="(5)"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="@+id/ratingBar"
+            app:layout_constraintStart_toEndOf="@+id/ratingBar"
+            app:layout_constraintTop_toTopOf="@+id/ratingBar" />
+
+
+        <TextView
+            android:id="@+id/reviewTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12"
+            android:layout_marginEnd="5dp"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/reviewPic"
+            app:layout_constraintEnd_toStartOf="@+id/reviewPic"
+            app:layout_constraintTop_toTopOf="@+id/reviewPic" />
+
+        <ImageView
+            android:id="@+id/reviewPic"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/review"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_price" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
