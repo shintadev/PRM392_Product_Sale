@@ -142,7 +142,7 @@
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_margin="24dp"
-        android:text="Checkout"
+        android:text="Pay with Paypal"
         android:textAllCaps="false"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"

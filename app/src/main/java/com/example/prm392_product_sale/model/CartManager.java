@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -99,6 +100,21 @@ public class CartManager {
                 .addOnFailureListener(e -> {
                     Toast.makeText(context, "Failed to remove from cart", Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "Failed to remove from cart", e);
+                });
+    }
+
+    public void clearCart(CartCallback callback) {
+        db.collection("users").document(userId)
+                .collection("cart").get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (DocumentSnapshot document : task.getResult()) {
+                            document.getReference().delete();
+                        }
+                        callback.onCartUpdated();
+                    } else {
+                        Log.e(TAG, "clearCart:failed", task.getException());
+                    }
                 });
     }
 

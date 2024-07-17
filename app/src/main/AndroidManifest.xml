@@ -61,6 +61,9 @@
             </intent-filter>
         </activity>
 
+        <service android:name="com.paypal.android.sdk.payments.PayPalService" />
+        <activity android:name="com.paypal.android.sdk.payments.PaymentActivity" />
+
         <meta-data
             android:name="com.google.android.gms.auth.api.credentials.WorkoutPrototypeStyle"
             android:value="@style/Widget.AppCompat.Light.ActionBar" />

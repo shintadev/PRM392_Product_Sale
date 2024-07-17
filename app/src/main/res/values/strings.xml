@@ -26,4 +26,5 @@
         <item>Sort by Price (Low to High)</item>
         <item>Sort by Price (High to Low)</item>
     </string-array>
+    <string name="paypal_client_id">AcXxfYc61WN4hF8lX0YjKDbo9Za9fb14qh78q12ozbLQXiYGeHFAv841X5IOVMW5EfVCiJt2mW7Fqx2C</string>
 </resources>
