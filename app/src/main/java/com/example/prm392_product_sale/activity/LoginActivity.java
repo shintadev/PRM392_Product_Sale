@@ -27,11 +27,10 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
     private static final int RC_SIGN_IN = 9001;
+    ActivityLoginBinding binding;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseFirestore firestore;
-
-    ActivityLoginBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,10 +114,14 @@ public class LoginActivity extends AppCompatActivity {
                                 Intent chatIntent = new Intent(this, MainActivity.class);
                                 startActivity(chatIntent);
                             }
-                            finish();
+                            Toast.makeText(LoginActivity.this, "Welcome back!", Toast.LENGTH_SHORT).show();
                         } else {
                             createUser(userId);
+                            Log.d(TAG, "No such document");
+                            Toast.makeText(LoginActivity.this, "Welcome!", Toast.LENGTH_SHORT).show();
+
                         }
+                        finish();
                     }
                 });
     }

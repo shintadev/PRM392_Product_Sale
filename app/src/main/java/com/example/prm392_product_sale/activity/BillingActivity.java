@@ -1,8 +1,13 @@
 package com.example.prm392_product_sale.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,17 +19,29 @@ import com.example.prm392_product_sale.R;
 import com.example.prm392_product_sale.adapter.BillingAdapter;
 import com.example.prm392_product_sale.databinding.ActivityBillingBinding;
 import com.example.prm392_product_sale.model.CartItem;
+import com.paypal.android.sdk.payments.PayPalConfiguration;
+import com.paypal.android.sdk.payments.PayPalPayment;
+import com.paypal.android.sdk.payments.PayPalService;
+import com.paypal.android.sdk.payments.PaymentActivity;
+import com.paypal.android.sdk.payments.PaymentConfirmation;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 public class BillingActivity extends AppCompatActivity {
 
     private static final String TAG = "BillingActivity";
+    public static final int PAYPAL_REQUEST_CODE = 123;
     RecyclerView rvBilling;
     TextView tvSubtotal, tvShipping, tvTax, tvTotal;
+    Button btnCheckout;
     ActivityBillingBinding binding;
     private List<CartItem> cartItemList;
     private BillingAdapter billingAdapter;
+    private PayPalConfiguration config;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +54,16 @@ public class BillingActivity extends AppCompatActivity {
             cartItemList = (List<CartItem>) getIntent().getSerializableExtra("cartItemList");
         }
 
+        config = new PayPalConfiguration()
+                .environment(PayPalConfiguration.ENVIRONMENT_NO_NETWORK) // Use ENVIRONMENT_PRODUCTION for real payments
+                .clientId("AcXxfYc61WN4hF8lX0YjKDbo9Za9fb14qh78q12ozbLQXiYGeHFAv841X5IOVMW5EfVCiJt2mW7Fqx2C");
+
         rvBilling = binding.rvBilling;
         tvSubtotal = binding.tvSubtotalBilling;
         tvShipping = binding.tvFeeDeliveryBilling;
         tvTax = binding.tvTaxBilling;
         tvTotal = binding.tvTotalBilling;
+        btnCheckout = binding.btnCheckoutBilling;
 
         billingAdapter = new BillingAdapter(cartItemList, this);
         rvBilling.setLayoutManager(new LinearLayoutManager(this));
@@ -65,6 +87,78 @@ public class BillingActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Check out");
         }
+
+        // Start PayPal service
+        Intent intent = new Intent(this, PayPalService.class);
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+        startService(intent);
+
+        btnCheckout.setOnClickListener(v -> {
+            processPayment(String.format("%.2f", total));
+        });
+    }
+
+    private void processPayment(String amount) {
+        PayPalPayment payment = new PayPalPayment(new BigDecimal(amount), "USD",
+                "Sample Item", PayPalPayment.PAYMENT_INTENT_SALE);
+
+        Intent intent = new Intent(this, PaymentActivity.class);
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+        intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payment);
+        startActivityForResult(intent, PAYPAL_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PAYPAL_REQUEST_CODE) {
+            Intent resultIntent = new Intent();
+            if (resultCode == RESULT_OK) {
+                PaymentConfirmation confirm = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
+                if (confirm != null) {
+                    try {
+                        String paymentDetails = confirm.toJSONObject().toString(4);
+                        JSONObject jsonDetails = new JSONObject(paymentDetails);
+
+                        // Extract necessary information from paymentDetails
+                        String paymentId = jsonDetails.getJSONObject("response").getString("id");
+                        String paymentState = jsonDetails.getJSONObject("response").getString("state");
+
+                        // Send back payment details
+                        resultIntent.putExtra("paymentState", paymentState);
+                        resultIntent.putExtra("paymentId", paymentId);
+
+                        // Verify payment on the client side (not recommended for production)
+                        if (paymentState.equals("approved")) {
+                            // Payment was successful
+                            setResult(Activity.RESULT_OK, resultIntent);
+                            Log.i(TAG, "Payment successful. Payment ID: " + paymentId);
+                        } else {
+                            // Payment was not successful
+                            setResult(Activity.RESULT_CANCELED, resultIntent);
+                            Log.i(TAG, "Payment failed. Payment ID: " + paymentId);
+                        }
+
+                    } catch (JSONException e) {
+                        Log.e(TAG, "an extremely unlikely failure occurred: ", e);
+                    }
+                }
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                setResult(Activity.RESULT_CANCELED, resultIntent);
+                Log.i(TAG, "The user canceled.");
+            } else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
+                setResult(Activity.RESULT_CANCELED, resultIntent);
+                Log.i(TAG, "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
+            }
+            finish();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        stopService(new Intent(this, PayPalService.class));
+        super.onDestroy();
     }
 
     @Override
