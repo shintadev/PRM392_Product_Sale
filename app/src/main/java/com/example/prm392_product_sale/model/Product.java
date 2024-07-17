@@ -9,6 +9,7 @@ public class Product implements Serializable {
     private String url;
     private float oldPrice;
     private float price;
+    private String category;
 
     public Product() {
     }
@@ -20,7 +21,7 @@ public class Product implements Serializable {
         this.oldPrice = oldPrice;
         this.price = (oldPrice*0.9f);
     }
-    public Product(String id, String title,String description, String url, float oldPrice) {
+    public Product(String id, String title,String description, String url, float oldPrice, String category) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -75,6 +76,14 @@ public class Product implements Serializable {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }
 
