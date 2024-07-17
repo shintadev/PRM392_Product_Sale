@@ -7,9 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,8 +38,9 @@ public class CartFragment extends Fragment implements CartAdapter.CartUpdateList
     private CartAdapter cartAdapter;
     private List<CartItem> cartItemList;
     private CartManager cartManager;
-    private Button btnCheckout;
+    private AppCompatButton btnCheckout;
     private FragmentCartBinding binding;
+    private ImageView btnBack;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -57,6 +60,7 @@ public class CartFragment extends Fragment implements CartAdapter.CartUpdateList
         rvCart = binding.rvCart;
         btnCheckout = binding.btnCheckout;
         tvTotalPrice = binding.tvTotal;
+        btnBack = binding.backBtn;
 
         cartItemList = new ArrayList<>();
         cartAdapter = new CartAdapter(cartItemList, getContext(), this);
@@ -69,6 +73,10 @@ public class CartFragment extends Fragment implements CartAdapter.CartUpdateList
             intent.putExtra("cartItemList", (Serializable) cartItemList);
             intent.putExtra("totalPrice", tvTotalPrice.getText().toString().substring(7, tvTotalPrice.length() - 1));
             startActivity(intent);
+        });
+
+        btnBack.setOnClickListener(v -> {
+            requireActivity().getOnBackPressedDispatcher().onBackPressed();
         });
 
 

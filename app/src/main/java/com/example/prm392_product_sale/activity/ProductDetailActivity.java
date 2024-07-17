@@ -111,9 +111,9 @@ public class ProductDetailActivity extends AppCompatActivity {
                     case 1:
                         tab.setText("Review");
                         break;
-                    case 2:
-                        tab.setText("Sold");
-                        break;
+//                    case 2:
+//                        tab.setText("Sold");
+//                        break;
                 }
             }
         }
