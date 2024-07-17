@@ -64,7 +64,7 @@ public class HomeFragment extends Fragment {
 
         RecyclerView rvProductsList = binding.rvProductList;
         rvProductsList.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        categoryAdapter = new CategoryAdapter(new ArrayList<>());
+        categoryAdapter = new CategoryAdapter(new ArrayList<>(), this::filterProductsByCategory);
         binding.recyclerCategories.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         binding.recyclerCategories.setAdapter(categoryAdapter);
 
@@ -73,6 +73,25 @@ public class HomeFragment extends Fragment {
         loadBanners();
         loadCategories();
         return root;
+    }
+
+    private void filterProductsByCategory(Category category) {
+        String categoryTitleLowerCase = category.getTitle().toLowerCase();
+        db.collection("products")
+                .whereEqualTo("category", categoryTitleLowerCase)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<Product> filteredList = new ArrayList<>();
+                        for (DocumentSnapshot document : task.getResult().getDocuments()) {
+                            Product product = document.toObject(Product.class);
+                            filteredList.add(product);
+                        }
+                        productAdapter.updateList(filteredList);
+                    } else {
+                        Log.w(TAG, "filterProductsByCategory:failed", task.getException());
+                    }
+                });
     }
 
     @Override
@@ -191,8 +210,9 @@ private void loadCategories() {
                                             document.getString("title"),
                                             document.getString("description"),
                                             document.getString("url"),
-                                            document.getDouble("oldPrice").floatValue()
-                                    );
+                                            document.getDouble("oldPrice").floatValue(),
+                                            document.getString("title")
+                                            );
                                     product.setPrice(document.getDouble("price").floatValue());
                                     productList.add(product);
                                 } catch (Exception e) {

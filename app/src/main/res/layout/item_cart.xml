@@ -10,7 +10,7 @@
         android:id="@+id/v_cart"
         android:layout_width="90dp"
         android:layout_height="90dp"
-        android:background="@drawable/item_background"
+        android:background="@drawable/gray_background"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -75,12 +75,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <Button
+
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_product_less_cart"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="-" />
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/green_button_bg"
+            android:gravity="center"
+            android:text="-"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <EditText
             android:id="@+id/et_product_quantity_cart"
@@ -91,12 +96,17 @@
             android:text="0"
             android:textAlignment="center" />
 
-        <Button
+
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_product_more_cart"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="+" />
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/green_button_bg"
+            android:gravity="center"
+            android:text="+"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

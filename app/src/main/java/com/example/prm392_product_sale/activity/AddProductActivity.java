@@ -112,8 +112,9 @@ public class AddProductActivity extends AppCompatActivity {
         String title = etProductTitle.getText().toString();
         String description = etProductDescription.getText().toString();
         float price = Float.parseFloat(etProductPrice.getText().toString());
+        String category = "orthers";
 
-        Product product = new Product(UUID.randomUUID().toString(), title, description, imageUrl, price);
+        Product product = new Product(UUID.randomUUID().toString(), title, description, imageUrl, price, category);
 
         db.collection("products")
                 .add(product)

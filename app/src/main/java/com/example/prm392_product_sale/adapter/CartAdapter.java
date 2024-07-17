@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.prm392_product_sale.R;
@@ -96,7 +97,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         public ImageView ivProductCart;
         public TextView tvProductTitleCart, tvProductPriceCart, tvProductTotalPriceCart, tvTotalPrice;
         public EditText etProductQuantityCart;
-        Button btnProductLessCart, btnProductMoreCart;
+        AppCompatButton btnProductLessCart, btnProductMoreCart;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

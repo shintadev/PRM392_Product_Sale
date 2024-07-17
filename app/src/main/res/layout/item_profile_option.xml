@@ -9,7 +9,7 @@
         android:id="@+id/iv_option_icon"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:src="@drawable/ic_cart_black_24dp" />
+        android:src="@drawable/maps" />
 
     <TextView
         android:id="@+id/tv_option_text"

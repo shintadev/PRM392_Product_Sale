@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.prm392_product_sale.model.Category;
 import com.example.prm392_product_sale.ui.home.CategoryViewHolder;
@@ -17,10 +16,17 @@ import java.util.List;
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
 
     private List<Category> categories;
+    private OnItemClickListener listener;
 
-    public CategoryAdapter(List<Category> categories) {
-        this.categories = categories;
+    public interface OnItemClickListener {
+        void onItemClick(Category category);
     }
+
+    public CategoryAdapter(List<Category> categories, OnItemClickListener listener) {
+        this.categories = categories;
+        this.listener = listener;
+    }
+
     public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
@@ -41,6 +47,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
                 .into(holder.pic);
 
         holder.title.setText(category.getTitle());
+        holder.itemView.setOnClickListener(v -> listener.onItemClick(category));
     }
 
     @Override

@@ -29,8 +29,8 @@ public class TabAdapter extends FragmentPagerAdapter {
                 return descriptionFragment;
             case 1:
                 return reviewFragment;
-            case 2:
-                return new SoldFragment();
+//            case 2:
+//                return new SoldFragment();
             default:
                 return descriptionFragment;
         }
@@ -38,7 +38,7 @@ public class TabAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 2;
     }
 
     public DescriptionFragment getDescriptionFragment() {
