@@ -1,5 +1,9 @@
 package com.example.prm392_product_sale.ui.cart;
 
+import static android.app.Activity.RESULT_OK;
+import static com.example.prm392_product_sale.activity.BillingActivity.PAYPAL_REQUEST_CODE;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -26,6 +31,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 public class CartFragment extends Fragment implements CartAdapter.CartUpdateListener {
 
@@ -68,7 +75,7 @@ public class CartFragment extends Fragment implements CartAdapter.CartUpdateList
             Intent intent = new Intent(getActivity(), BillingActivity.class);
             intent.putExtra("cartItemList", (Serializable) cartItemList);
             intent.putExtra("totalPrice", tvTotalPrice.getText().toString().substring(7, tvTotalPrice.length() - 1));
-            startActivity(intent);
+            startActivityForResult(intent, PAYPAL_REQUEST_CODE);
         });
 
 
@@ -89,9 +96,12 @@ public class CartFragment extends Fragment implements CartAdapter.CartUpdateList
     public void loadCartItems() {
         cartManager.getCartItems(task -> {
             if (task.isSuccessful()) {
-                if (task.getResult().size() == 0) {
+                if (task.getResult().isEmpty()) {
+                    cartItemList.clear();
+                    cartAdapter.notifyDataSetChanged();
                     binding.tvEmptyCart.setText(("The Cart is Empty"));
                     binding.tvEmptyCart.setVisibility(View.VISIBLE);
+                    tvTotalPrice.setText(("Total: 0$"));
                 } else {
                     cartItemList.clear();
                     float total = 0.0f;
@@ -116,5 +126,34 @@ public class CartFragment extends Fragment implements CartAdapter.CartUpdateList
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PAYPAL_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                // Payment was successful, update the database
+                if (data != null) {
+                    String paymentId = data.getStringExtra("paymentId");
+                    String paymentState = data.getStringExtra("paymentState");
+
+                    if ("approved".equals(paymentState)) {
+                        // Update the database to mark items as purchased
+                        updateDatabaseForSuccessfulPayment();
+                        Toast.makeText(getContext(), "Payment Successful! Payment ID: " + paymentId, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "Payment failed: " + paymentState, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                Toast.makeText(getContext(), "Payment Cancelled!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void updateDatabaseForSuccessfulPayment() {
+        cartManager.clearCart(this::onCartUpdated);
     }
 }

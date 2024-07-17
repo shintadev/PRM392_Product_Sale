@@ -156,8 +156,8 @@ private void loadCategories() {
         public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
             if (response.isSuccessful()) {
                 List<Category> categories = response.body();
-                if (categories != null) {
-                    binding.progressBarOfficial.setVisibility(View.GONE);
+                if (categories != null&&binding!=null) {
+                    binding.progressBarOfficial.setVisibility(View.INVISIBLE);
                     categoryAdapter.setCategories(categories);
                     categoryAdapter.notifyDataSetChanged();
                 } else {

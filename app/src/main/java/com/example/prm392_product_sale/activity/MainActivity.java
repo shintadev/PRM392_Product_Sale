@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
     @Override
     protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
-        navigateToCartFragment();
+//        navigateToCartFragment();
     }
 
     private void navigateToCartFragment() {
