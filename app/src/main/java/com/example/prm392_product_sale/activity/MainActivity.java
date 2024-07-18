@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                 = new AppBarConfiguration.Builder(
                 R.id.navigation_home,
                 R.id.navigation_cart,
+                R.id.navigation_order,
                 R.id.navigation_profile).build();
 
         // Find the NavController and set up navigation
@@ -177,11 +178,6 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                 Intent serviceIntent = new Intent(context, NotificationService.class);
                 serviceIntent.putExtra("cartItemCount", count);
                 context.startService(serviceIntent);
-            }
-
-            @Override
-            public void onFloatCallback(float totalPrice) {
-                // Handle float callback
             }
         };
 

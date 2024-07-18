@@ -17,8 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.prm392_product_sale.R;
-import com.example.prm392_product_sale.activity.AdminActivity;
-import com.example.prm392_product_sale.activity.AdminConversationListActivity;
 import com.example.prm392_product_sale.activity.MainActivity;
 import com.example.prm392_product_sale.adapter.ProfileOptionAdapter;
 import com.example.prm392_product_sale.databinding.FragmentProfileBinding;
@@ -158,15 +156,9 @@ public class ProfileFragment extends Fragment {
                         DocumentSnapshot document = task.getResult();
                         Log.d(TAG, "checkUserRole:success");
                         if (document.exists()) {
-                            boolean isAdmin = Boolean.TRUE.equals(document.getBoolean("admin"));
-                            if (isAdmin) {
-                                Intent adminIntent = new Intent(this.getContext(), AdminActivity.class);
-                                startActivity(adminIntent);
-                            } else {
-                                Intent chatIntent = new Intent(this.getContext(), MainActivity.class);
-                                startActivity(chatIntent);
-                                getActivity().finish();
-                            }
+                            Intent intent = new Intent(this.getContext(), MainActivity.class);
+                            startActivity(intent);
+                            getActivity().finish();
                         } else {
                             createUser(userId);
                         }

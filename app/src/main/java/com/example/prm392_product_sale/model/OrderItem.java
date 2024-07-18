@@ -2,14 +2,14 @@ package com.example.prm392_product_sale.model;
 
 import java.io.Serializable;
 
-public class CartItem implements Serializable {
+public class OrderItem implements Serializable {
     private Product product;
     private int quantity;
 
-    public CartItem() {
+    public OrderItem() {
     }
 
-    public CartItem(Product product, int quantity) {
+    public OrderItem(Product product, int quantity) {
         this.product = product;
         this.quantity = quantity;
     }

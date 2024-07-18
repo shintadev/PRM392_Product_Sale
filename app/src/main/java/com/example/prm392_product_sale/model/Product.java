@@ -14,20 +14,23 @@ public class Product implements Serializable {
     public Product() {
     }
 
-    public Product(String title, String description, String url, float oldPrice){
+    public Product(String title, String description, String url, float oldPrice, String category) {
         this.title = title;
         this.description = description;
         this.url = url;
         this.oldPrice = oldPrice;
-        this.price = (oldPrice*0.9f);
+        this.price = (oldPrice * 0.9f);
+        this.category = category;
     }
-    public Product(String id, String title,String description, String url, float oldPrice, String category) {
+
+    public Product(String id, String title, String description, String url, float oldPrice, String category) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.url = url;
         this.oldPrice = oldPrice;
-        this.price = oldPrice*0.9f;
+        this.price = oldPrice * 0.9f;
+        this.category = category;
     }
 
     public String getId() {

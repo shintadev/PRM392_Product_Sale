@@ -7,15 +7,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.prm392_product_sale.R;
 import com.example.prm392_product_sale.databinding.ActivityAddProductBinding;
 import com.example.prm392_product_sale.model.Product;
 import com.github.dhaval2404.imagepicker.ImagePicker;
@@ -30,9 +34,12 @@ import javax.annotation.Nullable;
 public class AddProductActivity extends AppCompatActivity {
     private static final String TAG = "AddProductActivity";
     ActivityAddProductBinding binding;
+    String title, description, category;
+    float price;
     private EditText etProductTitle, etProductPrice, etProductDescription;
     private ImageView ivProductImage;
     private Button btnPickImage, btnAddProduct;
+    private Spinner productCategorySpinner;
     private Uri imageUri;
     private FirebaseFirestore db;
     private FirebaseStorage storage;
@@ -50,6 +57,7 @@ public class AddProductActivity extends AppCompatActivity {
         ivProductImage = binding.ivProductImage;
         btnPickImage = binding.btnPickImage;
         btnAddProduct = binding.btnAddProduct;
+        productCategorySpinner = binding.spinnerProductCategory;
 
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
@@ -66,6 +74,42 @@ public class AddProductActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Add Product");
         }
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.category_options, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        productCategorySpinner.setAdapter(adapter);
+
+        productCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        category = "";
+                        break;
+                    case 1:
+                        category = "laptop";
+                        break;
+                    case 2:
+                        category = "phone";
+                        break;
+                    case 3:
+                        category = "headp";
+                        break;
+                    case 4:
+                        category = "games";
+                        break;
+                    case 5:
+                        category = "others";
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
     }
 
     @Override
@@ -91,8 +135,16 @@ public class AddProductActivity extends AppCompatActivity {
     }
 
     private void uploadImageAndSaveProduct() {
-        binding.addProductLoading.setVisibility(View.VISIBLE);
+        title = etProductTitle.getText().toString();
+        description = etProductDescription.getText().toString();
+        price = Float.parseFloat((!etProductPrice.getText().toString().isEmpty()) ? etProductPrice.getText().toString() : String.valueOf(0));
+        if (title.isEmpty() || description.isEmpty() || price == 0 || category.isEmpty()) {
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (imageUri != null) {
+            binding.addProductLoading.setVisibility(View.VISIBLE);
+            btnAddProduct.setEnabled(false);
             StorageReference storageRef = storage.getReference();
             StorageReference imageRef = storageRef.child("images/" + UUID.randomUUID().toString());
 
@@ -104,17 +156,12 @@ public class AddProductActivity extends AppCompatActivity {
                     }))
                     .addOnFailureListener(e -> Log.e(TAG, "Image upload failed", e));
         } else {
-            saveProductToFirestore(null);
+            Toast.makeText(this, "Please select an image", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void saveProductToFirestore(String imageUrl) {
-        String title = etProductTitle.getText().toString();
-        String description = etProductDescription.getText().toString();
-        float price = Float.parseFloat(etProductPrice.getText().toString());
-        String category = "orthers";
-
-        Product product = new Product(UUID.randomUUID().toString(), title, description, imageUrl, price, category);
+        Product product = new Product("", title, description, imageUrl, price, category);
 
         db.collection("products")
                 .add(product)

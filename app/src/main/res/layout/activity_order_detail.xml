@@ -2,38 +2,68 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/billing"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.BillingActivity">
+    tools:context=".activity.OrderDetailActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/tb_billing"
+        android:id="@+id/tb_order_detail"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
+        android:background="@color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:titleTextColor="@color/white" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_order_status_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tb_order_detail" />
+
+    <TextView
+        android:id="@+id/tv_order_status_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status"
+        app:layout_constraintBottom_toBottomOf="@id/tv_order_status_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_order_status_title" />
+
+    <TextView
+        android:id="@+id/tv_order_location_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Location"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_order_status_title" />
+
+    <TextView
+        android:id="@+id/tv_order_location_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Location"
+        app:layout_constraintTop_toTopOf="@id/tv_order_location_title"
+        app:layout_constraintBottom_toBottomOf="@id/tv_order_location_title"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_billing"
+        android:id="@+id/rv_order_detail"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="16dp"
-        app:layout_constraintBottom_toTopOf="@id/cl_total_billing"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tb_billing"
-        app:layout_constraintVertical_weight="1" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/cl_total_order"
+        app:layout_constraintTop_toBottomOf="@id/tv_order_location_content" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_total_billing"
+        android:id="@+id/cl_total_order"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        app:layout_constraintBottom_toTopOf="@id/btn_checkout_billing">
+        app:layout_constraintBottom_toTopOf="@id/btn_buy_again_order">
 
         <TextView
             android:id="@+id/tv_subtotal"
@@ -47,7 +77,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_subtotal_billing"
+            android:id="@+id/tv_subtotal_order"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="$"
@@ -70,7 +100,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_subtotal" />
 
         <TextView
-            android:id="@+id/tv_fee_delivery_billing"
+            android:id="@+id/tv_fee_delivery_order"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -94,7 +124,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_fee_delivery" />
 
         <TextView
-            android:id="@+id/tv_tax_billing"
+            android:id="@+id/tv_tax_order"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -112,37 +142,11 @@
             android:background="#D2D2D2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_tax_billing" />
+            app:layout_constraintTop_toBottomOf="@id/tv_tax_order" />
 
-
-        <Button
-            android:id="@+id/btn_select_address"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_marginVertical="24dp"
-            android:text="Select adress"
-            android:textAllCaps="false"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toTopOf="@+id/tv_address_billing"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_tax_billing"
-            tools:layout_editor_absoluteX="0dp" />
 
         <TextView
-            android:id="@+id/tv_address_billing"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Address"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:textStyle="normal"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="@+id/btn_select_address"
-            app:layout_constraintTop_toBottomOf="@id/btn_select_address" />
-
-        <TextView
-            android:id="@+id/tv_total_billing_title"
+            android:id="@+id/tv_total_order_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -151,32 +155,35 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_address_billing" />
+            app:layout_constraintTop_toBottomOf="@id/tv_tax_order" />
 
 
         <TextView
-            android:id="@+id/tv_total_billing"
+            android:id="@+id/tv_total_order"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="$"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/tv_total_billing_title"
+            app:layout_constraintBottom_toBottomOf="@id/tv_total_order_title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_total_billing_title" />
+            app:layout_constraintTop_toTopOf="@id/tv_total_order_title" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <Button
-        android:id="@+id/btn_checkout_billing"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_buy_again_order"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="24dp"
-        android:text="Pay with Paypal"
+        android:background="@drawable/green_button_bg"
+        android:text="Buy Again"
         android:textAllCaps="false"
+        android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
