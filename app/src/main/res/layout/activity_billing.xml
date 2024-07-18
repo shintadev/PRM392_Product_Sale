@@ -82,6 +82,7 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_subtotal" />
 
             <TextView
+                android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -113,34 +114,72 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_tax_billing" />
 
+
+            <Button
+                android:id="@+id/btn_select_address"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:text="Select adress"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_address"
+                app:layout_constraintTop_toTopOf="@+id/tv_address"
+                tools:layout_editor_absoluteX="0dp" />
+
             <TextView
+                android:id="@+id/tv_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="normal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_tax_billing" />
+
+            <TextView
+                android:id="@+id/tv_address_billing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="normal"
+                app:layout_constraintStart_toStartOf="@+id/btn_select_address"
+                app:layout_constraintTop_toBottomOf="@id/tv_address" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Total"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_tax_billing" />
+                app:layout_constraintTop_toBottomOf="@id/tv_address_billing" />
+
 
             <TextView
                 android:id="@+id/tv_total_billing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
                 android:text="$"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_tax_billing" />
+                app:layout_constraintTop_toBottomOf="@id/tv_address_billing" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
     <Button
         android:id="@+id/btn_checkout_billing"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="50dp"
         android:layout_margin="24dp"
         android:text="Pay with Paypal"
         android:textAllCaps="false"

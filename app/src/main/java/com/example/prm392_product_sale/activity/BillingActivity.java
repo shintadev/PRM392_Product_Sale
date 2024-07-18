@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -35,13 +37,20 @@ public class BillingActivity extends AppCompatActivity {
 
     private static final String TAG = "BillingActivity";
     public static final int PAYPAL_REQUEST_CODE = 123;
+    private static final int REQUEST_SELECT_ADDRESS = 1;
     RecyclerView rvBilling;
     TextView tvSubtotal, tvShipping, tvTax, tvTotal;
     Button btnCheckout;
     ActivityBillingBinding binding;
+
     private List<CartItem> cartItemList;
     private BillingAdapter billingAdapter;
     private PayPalConfiguration config;
+    private String selectedAddress;
+    TextView tvAddress;
+    private boolean isSelectingProvince = true;
+    private boolean isSelectingDistrict = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,14 +97,76 @@ public class BillingActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Check out");
         }
 
+        Button btnSelectAddress = findViewById(R.id.btn_select_address);
+        btnSelectAddress.setOnClickListener(v -> {
+            isSelectingProvince = true;
+            isSelectingDistrict = true;
+            AddressSelectionActivity("TINHTHANH");
+        });
+
         // Start PayPal service
         Intent intent = new Intent(this, PayPalService.class);
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
         startService(intent);
 
+
         btnCheckout.setOnClickListener(v -> {
-            processPayment(String.format("%.2f", total));
+            if (selectedAddress == null) {
+                Toast.makeText(this, "Please select an address first", Toast.LENGTH_SHORT).show();
+            } else {
+                processPayment(String.format("%.2f", total));
+
+            }
         });
+    }
+
+
+    private final ActivityResultLauncher<Intent> startAddressSelection = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    tvAddress = binding.tvAddressBilling;
+                    Intent data = result.getData();
+                    String addressPart = data.getStringExtra("selected_address");
+                    String TINHTHANH_ID = data.getStringExtra("selected_address_id");
+                    if (selectedAddress == null) {
+                        selectedAddress = addressPart;
+                    } else {
+                        selectedAddress = selectedAddress + ", " + addressPart;
+                    }
+                    tvAddress.setText(selectedAddress);
+                    Toast.makeText(this, selectedAddress, Toast.LENGTH_SHORT).show();
+
+                    if (isSelectingProvince) {
+                        isSelectingProvince = false;
+                        AddressSelectionActivity("QUANHUYEN", TINHTHANH_ID);
+
+                    }
+                    else if (isSelectingDistrict) {
+                        isSelectingDistrict = false;
+                        AddressSelectionActivity("PHUONGXA", TINHTHANH_ID, isSelectingDistrict);}
+                }
+            }
+    );
+
+    private void AddressSelectionActivity(String API_TYPE) {
+        Intent intent = new Intent(this, AddressSelectionActivity.class);
+        intent.putExtra("API_TYPE", API_TYPE);
+        startAddressSelection.launch(intent);
+    }
+
+    private void AddressSelectionActivity(String API_TYPE, String TINHTHANH_ID) {
+        Intent intent = new Intent(this, AddressSelectionActivity.class);
+        intent.putExtra("API_TYPE", API_TYPE);
+        intent.putExtra("TINHTHANH_ID", TINHTHANH_ID);
+        startAddressSelection.launch(intent);
+    }
+
+    private void AddressSelectionActivity(String API_TYPE, String QUANHUYEN_ID, boolean isSelectingDistrict) {
+        Intent intent = new Intent(this, AddressSelectionActivity.class);
+        intent.putExtra("API_TYPE", API_TYPE);
+        intent.putExtra("QUANHUYEN_ID", QUANHUYEN_ID);
+        startAddressSelection.launch(intent);
     }
 
     private void processPayment(String amount) {
@@ -160,6 +231,7 @@ public class BillingActivity extends AppCompatActivity {
         stopService(new Intent(this, PayPalService.class));
         super.onDestroy();
     }
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
