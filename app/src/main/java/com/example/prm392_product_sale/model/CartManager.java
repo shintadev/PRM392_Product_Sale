@@ -66,11 +66,6 @@ public class CartManager {
             public void onIntCallback(int count) {
 
             }
-
-            @Override
-            public void onFloatCallback(float totalPrice) {
-
-            }
         };
 
         isCartItemExists(product.getId(), firestoreCallback );
@@ -176,8 +171,6 @@ public class CartManager {
         void onBooleanCallback(boolean exists);
 
         void onIntCallback(int count);
-
-        void onFloatCallback(float totalPrice);
     }
 
     public interface CartCallback {

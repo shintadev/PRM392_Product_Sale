@@ -1,19 +1,36 @@
 package com.example.prm392_product_sale.model;
 
-import androidx.annotation.NonNull;
+import java.io.Serializable;
 
-public class OrderItem extends CartItem{
+public class OrderItem implements Serializable {
+    private Product product;
+    private int quantity;
+
+    public OrderItem() {
+    }
 
     public OrderItem(Product product, int quantity) {
-        super(product, quantity);
+        this.product = product;
+        this.quantity = quantity;
     }
 
-    public double getTotal() {
-        return getProduct().getPrice() * getQuantity();
+    public Product getProduct() {
+        return product;
     }
 
-    @NonNull
-    public String toString() {
-        return getProduct().getTitle() + " x" + getQuantity() + " = $" + getTotal();
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public double getTotalPrice() {
+        return product.getPrice() * quantity;
     }
 }

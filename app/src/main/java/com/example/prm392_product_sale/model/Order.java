@@ -8,8 +8,10 @@ public class Order implements Serializable {
     private String userId;
     private String address;
     private float totalPrice;
+    private int deliveryDate;
     private String status;
     private List<OrderItem> orderItems;
+
 
     public Order() {
     }
@@ -55,6 +57,14 @@ public class Order implements Serializable {
         this.totalPrice = totalPrice;
     }
 
+    public int getDeliveryDate() {
+        return deliveryDate;
+    }
+
+    public void setDeliveryDate(int deliveryDate) {
+        this.deliveryDate = deliveryDate;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -69,5 +79,17 @@ public class Order implements Serializable {
 
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
+    }
+
+    public double getSubtotal() {
+        double subtotal = 0.0;
+        for (OrderItem item : orderItems) {
+            subtotal += item.getTotalPrice() * item.getQuantity();
+        }
+        return subtotal;
+    }
+
+    public double getTax() {
+        return getSubtotal() * 0.1;
     }
 }

@@ -31,6 +31,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,7 +124,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                         DocumentSnapshot document = task.getResult();
                         Log.d(TAG, "loadProduct:success ");
                         if (document.exists() && binding != null) {
-                            Glide.with(this).load(document.getString("url")).into(binding.ivDetailProduct);
+                            Picasso.get().load(document.getString("url")).fit().centerInside().into(binding.ivDetailProduct);
 
                             binding.tvProductTitle.setText(document.getString("title"));
                             descriptionFragment.setDescription(document.getString("description"));
@@ -199,11 +200,6 @@ public class ProductDetailActivity extends AppCompatActivity {
                 Intent serviceIntent = new Intent(context, NotificationService.class);
                 serviceIntent.putExtra("cartItemCount", count);
                 context.startService(serviceIntent);
-            }
-
-            @Override
-            public void onFloatCallback(float totalPrice) {
-
             }
         };
 

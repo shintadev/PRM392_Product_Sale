@@ -179,11 +179,6 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                 serviceIntent.putExtra("cartItemCount", count);
                 context.startService(serviceIntent);
             }
-
-            @Override
-            public void onFloatCallback(float totalPrice) {
-                // Handle float callback
-            }
         };
 
         cartManager.getCartItemCount(callback);

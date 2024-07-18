@@ -43,6 +43,7 @@ public class BillingActivity extends AppCompatActivity {
     public static final int PAYPAL_REQUEST_CODE = 123;
     private static final String TAG = "BillingActivity";
     private static final int REQUEST_SELECT_ADDRESS = 1;
+    Float total;
     private RecyclerView rvBilling;
     private TextView tvSubtotal, tvShipping, tvTax, tvTotal, tvAddress;
     private Button btnCheckout;
@@ -50,7 +51,6 @@ public class BillingActivity extends AppCompatActivity {
     private List<CartItem> cartItemList;
     private BillingAdapter billingAdapter;
     private PayPalConfiguration config;
-    private OrderManager orderManager;
     private String selectedAddress;
     private boolean isSelectingProvince = true;
     private boolean isSelectingDistrict = true;
@@ -77,7 +77,6 @@ public class BillingActivity extends AppCompatActivity {
         tvTax = binding.tvTaxBilling;
         tvTotal = binding.tvTotalBilling;
         btnCheckout = binding.btnCheckoutBilling;
-        orderManager = new OrderManager(getIntent().getStringExtra("userId"), this);
 
         billingAdapter = new BillingAdapter(cartItemList, this);
         rvBilling.setLayoutManager(new LinearLayoutManager(this));
@@ -86,7 +85,7 @@ public class BillingActivity extends AppCompatActivity {
         Float subtotal = Float.parseFloat(getIntent().getStringExtra("totalPrice"));
         String shipping = "Free";
         Float tax = Float.parseFloat(getIntent().getStringExtra("totalPrice")) * 0.1f;
-        Float total = subtotal + tax;
+        total = subtotal + tax;
 
         tvSubtotal.setText(String.format("%.2f $", Float.parseFloat(getIntent().getStringExtra("totalPrice"))));
         tvShipping.setText(shipping);
@@ -120,7 +119,6 @@ public class BillingActivity extends AppCompatActivity {
                 Toast.makeText(this, "Please select an address first", Toast.LENGTH_SHORT).show();
             } else {
                 processPayment(String.format("%.2f", total));
-
             }
         });
     }
@@ -128,6 +126,13 @@ public class BillingActivity extends AppCompatActivity {
     private void AddressSelectionActivity(String API_TYPE) {
         Intent intent = new Intent(this, AddressSelectionActivity.class);
         intent.putExtra("API_TYPE", API_TYPE);
+        startAddressSelection.launch(intent);
+    }
+
+    private void AddressSelectionActivity(String API_TYPE, String TINHTHANH_ID) {
+        Intent intent = new Intent(this, AddressSelectionActivity.class);
+        intent.putExtra("API_TYPE", API_TYPE);
+        intent.putExtra("TINHTHANH_ID", TINHTHANH_ID);
         startAddressSelection.launch(intent);
     }    private final ActivityResultLauncher<Intent> startAddressSelection = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -156,13 +161,6 @@ public class BillingActivity extends AppCompatActivity {
                 }
             }
     );
-
-    private void AddressSelectionActivity(String API_TYPE, String TINHTHANH_ID) {
-        Intent intent = new Intent(this, AddressSelectionActivity.class);
-        intent.putExtra("API_TYPE", API_TYPE);
-        intent.putExtra("TINHTHANH_ID", TINHTHANH_ID);
-        startAddressSelection.launch(intent);
-    }
 
     private void AddressSelectionActivity(String API_TYPE, String QUANHUYEN_ID, boolean isSelectingDistrict) {
         Intent intent = new Intent(this, AddressSelectionActivity.class);
@@ -205,19 +203,20 @@ public class BillingActivity extends AppCompatActivity {
                         // Verify payment on the client side (not recommended for production)
                         if (paymentState.equals("approved")) {
                             // Payment was successful
+                            setResult(Activity.RESULT_OK, resultIntent);
+                            String userId = getIntent().getStringExtra("userId");
+                            if (userId == null) {
+                                Log.e(TAG, "User ID is null");
+                                return;
+                            }
+                            OrderManager orderManager = new OrderManager(userId, this);
                             List<OrderItem> orderItems = new ArrayList<>();
                             cartItemList.forEach(cartItem -> {
-                                OrderItem orderItem = (OrderItem) cartItem;
+                                OrderItem orderItem = new OrderItem(cartItem.getProduct(), cartItem.getQuantity());
                                 orderItems.add(orderItem);
                             });
-                            Order order = new Order("",
-                                    getIntent().getStringExtra("userId"),
-                                    tvAddress.getText().toString(),
-                                    Float.parseFloat(tvTotal.getText().toString()),
-                                    "On-going",
-                                    orderItems);
+                            Order order = new Order("", userId, tvAddress.getText().toString(), total, "On-going", orderItems);
                             orderManager.addOrder(order);
-                            setResult(Activity.RESULT_OK, resultIntent);
                             Log.i(TAG, "Payment successful. Payment ID: " + paymentId);
                         } else {
                             // Payment was not successful
@@ -255,6 +254,7 @@ public class BillingActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 
 

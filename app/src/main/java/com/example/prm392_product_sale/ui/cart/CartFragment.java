@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,9 +37,9 @@ import javax.annotation.Nullable;
 
 public class CartFragment extends Fragment implements CartAdapter.CartUpdateListener {
 
-    FirebaseAuth mAuth;
-    RecyclerView rvCart;
-    TextView tvTotalPrice;
+    private FirebaseAuth mAuth;
+    private RecyclerView rvCart;
+    private TextView tvTotalPrice;
     private String TAG = "CartFragment";
     private CartAdapter cartAdapter;
     private List<CartItem> cartItemList;
@@ -77,11 +76,11 @@ public class CartFragment extends Fragment implements CartAdapter.CartUpdateList
 
         btnCheckout.setOnClickListener(view -> {
             if (!cartItemList.isEmpty()) {
-            Intent intent = new Intent(getActivity(), BillingActivity.class);
-            intent.putExtra("userId", mAuth.getCurrentUser().getUid());
-            intent.putExtra("cartItemList", (Serializable) cartItemList);
-            intent.putExtra("totalPrice", tvTotalPrice.getText().toString().substring(7, tvTotalPrice.length() - 1));
-            startActivityForResult(intent, PAYPAL_REQUEST_CODE);
+                Intent intent = new Intent(getActivity(), BillingActivity.class);
+                intent.putExtra("userId", mAuth.getCurrentUser().getUid());
+                intent.putExtra("cartItemList", (Serializable) cartItemList);
+                intent.putExtra("totalPrice", tvTotalPrice.getText().toString().substring(7, tvTotalPrice.length() - 1));
+                startActivityForResult(intent, PAYPAL_REQUEST_CODE);
             } else {
                 Toast.makeText(getContext(), "Cart is empty", Toast.LENGTH_SHORT).show();
             }
@@ -108,7 +107,7 @@ public class CartFragment extends Fragment implements CartAdapter.CartUpdateList
 
     public void loadCartItems() {
         cartManager.getCartItems(task -> {
-            if (task.isSuccessful()) {
+            if (task.isSuccessful() && binding != null) {
                 if (task.getResult().isEmpty()) {
                     cartItemList.clear();
                     cartAdapter.notifyDataSetChanged();
@@ -128,7 +127,7 @@ public class CartFragment extends Fragment implements CartAdapter.CartUpdateList
                     cartAdapter.notifyDataSetChanged();
                     tvTotalPrice.setText(String.format("Total: %.2f$", total));
                 }
-                binding.pbCart.setVisibility(View.INVISIBLE);
+                binding.pbCart.setVisibility(View.GONE);
             } else {
                 Log.e(TAG, "loadCartItems:failed", task.getException());
             }
@@ -155,6 +154,7 @@ public class CartFragment extends Fragment implements CartAdapter.CartUpdateList
                     if ("approved".equals(paymentState)) {
                         // Update the database to mark items as purchased
                         updateDatabaseForSuccessfulPayment();
+                        // Show a success message
                         Toast.makeText(getContext(), "Payment Successful! Payment ID: " + paymentId, Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getContext(), "Payment failed: " + paymentState, Toast.LENGTH_SHORT).show();

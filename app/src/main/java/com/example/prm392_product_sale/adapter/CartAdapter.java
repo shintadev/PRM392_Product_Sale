@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -93,27 +92,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         return items.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView ivProductCart;
-        public TextView tvProductTitleCart, tvProductPriceCart, tvProductTotalPriceCart, tvTotalPrice;
-        public EditText etProductQuantityCart;
-        AppCompatButton btnProductLessCart, btnProductMoreCart;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            ivProductCart = itemView.findViewById(R.id.iv_product_cart);
-            tvProductTitleCart = itemView.findViewById(R.id.tv_product_title_cart);
-            tvProductPriceCart = itemView.findViewById(R.id.tv_price_cart);
-            tvProductTotalPriceCart = itemView.findViewById(R.id.tv_total_price_cart);
-            etProductQuantityCart = itemView.findViewById(R.id.et_product_quantity_cart);
-            btnProductLessCart = itemView.findViewById(R.id.btn_product_less_cart);
-            btnProductMoreCart = itemView.findViewById(R.id.btn_product_more_cart);
-            if (itemView.findViewById(R.id.tv_total) != null)
-                tvTotalPrice = itemView.findViewById(R.id.tv_total);
-
-        }
-    }
-
     private void updateCartNotification(Context context) {
         CartManager.FirestoreCallback callback = new CartManager.FirestoreCallback() {
 
@@ -128,11 +106,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                 serviceIntent.putExtra("cartItemCount", count);
                 context.startService(serviceIntent);
             }
-
-            @Override
-            public void onFloatCallback(float totalPrice) {
-
-            }
         };
 
         cartManager.getCartItemCount(callback); // Implement a method to get the cart item count
@@ -140,6 +113,27 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     public interface CartUpdateListener {
         void onCartUpdated();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        public ImageView ivProductCart;
+        public TextView tvProductTitleCart, tvProductPriceCart, tvProductTotalPriceCart, tvTotalPrice;
+        public EditText etProductQuantityCart;
+        public AppCompatButton btnProductLessCart, btnProductMoreCart;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            ivProductCart = itemView.findViewById(R.id.iv_product_cart);
+            tvProductTitleCart = itemView.findViewById(R.id.tv_product_title_cart);
+            tvProductPriceCart = itemView.findViewById(R.id.tv_price_cart);
+            tvProductTotalPriceCart = itemView.findViewById(R.id.tv_total_price_cart);
+            etProductQuantityCart = itemView.findViewById(R.id.et_product_quantity_cart);
+            btnProductLessCart = itemView.findViewById(R.id.btn_product_less_cart);
+            btnProductMoreCart = itemView.findViewById(R.id.btn_product_more_cart);
+            if (itemView.findViewById(R.id.tv_total) != null)
+                tvTotalPrice = itemView.findViewById(R.id.tv_total);
+
+        }
     }
 }
 
