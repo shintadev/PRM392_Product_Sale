@@ -8,6 +8,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
@@ -25,8 +26,11 @@ public class NotificationService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        int cartItemCount = intent.getIntExtra("cartItemCount", 0);
-        showNotification(cartItemCount);
+        if (intent != null) {
+            int cartItemCount = intent.getIntExtra("cartItemCount", 0);
+            showNotification(cartItemCount);
+        } else {
+            Log.d("NotificationService", "Intent is null");}
         return START_STICKY;
     }
 

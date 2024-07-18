@@ -35,7 +35,7 @@ public class ProfileOptionAdapter extends RecyclerView.Adapter<ProfileOptionAdap
 
         switch (option) {
             case "Map":
-                holder.optionIcon.setImageResource(R.drawable.ic_cart_black_24dp);
+                holder.optionIcon.setImageResource(R.drawable.maps);
                 holder.optionText.setText("Map");
                 holder.itemView.setOnClickListener(v -> {
                     Intent intent = new Intent(v.getContext(), MapActivity.class);
