@@ -8,18 +8,15 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
-import com.example.prm392_product_sale.adapter.CartAdapter;
 import com.example.prm392_product_sale.adapter.TabAdapter;
 import com.example.prm392_product_sale.databinding.ActivityProductDetailBinding;
 import com.example.prm392_product_sale.model.CartManager;
@@ -34,8 +31,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.squareup.picasso.Picasso;
-import com.example.prm392_product_sale.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -135,7 +130,14 @@ public class ProductDetailActivity extends AppCompatActivity {
                             binding.tvProductPrice.setText(String.format("$%.2f", document.getDouble("price").floatValue()));
                             binding.tvTotal.setText(String.format("$%.2f", getValue() * document.getDouble("price").floatValue()));
                             reviewFragment.setReviews(dataExampleForReview());
-                            Product product = document.toObject(Product.class);
+                            Product product = new Product(
+                                    document.getId(),
+                                    document.getString("title"),
+                                    document.getString("description"),
+                                    document.getString("url"),
+                                    document.getDouble("oldPrice").floatValue(),
+                                    document.getString("title")
+                            );
                             quantity.addTextChangedListener(new TextWatcher() {
 
                                 public void afterTextChanged(Editable s) {
@@ -153,7 +155,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                             final AppCompatButton buttonAddToCart = binding.btnAddToCart;
                             buttonAddToCart.setOnClickListener(v -> {
                                 user = FirebaseAuth.getInstance().getCurrentUser();
-                                cartManager = new CartManager(user.getUid(),this);
+                                cartManager = new CartManager(user.getUid(), this);
                                 cartManager.addToCart(product, getValue(), () -> {
                                     updateCartNotification(this);
                                 });
@@ -218,13 +220,13 @@ public class ProductDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private List<Review> dataExampleForReview(){
+    private List<Review> dataExampleForReview() {
         List<Review> reviews = new ArrayList<>();
         reviews.add(new Review(1, "Review 1", "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...", 5, "2022-01-01", new UserInReview(1, "User 1", "https://kynguyenlamdep.com/wp-content/uploads/2022/06/avatar-cute-meo-con-than-chet.jpg")));
         reviews.add(new Review(2, "Review 1", "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...", 5, "2022-01-01", new UserInReview(1, "User 1", "https://kynguyenlamdep.com/wp-content/uploads/2022/06/avatar-cute-meo-con-than-chet.jpg")));
         reviews.add(new Review(3, "Review 1", "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...", 5, "2022-01-01", new UserInReview(1, "User 1", "https://kynguyenlamdep.com/wp-content/uploads/2022/06/avatar-cute-meo-con-than-chet.jpg")));
         reviews.add(new Review(4, "Review 1", "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...", 5, "2022-01-01", new UserInReview(1, "User 1", "https://kynguyenlamdep.com/wp-content/uploads/2022/06/avatar-cute-meo-con-than-chet.jpg")));
         reviews.add(new Review(5, "Review 1", "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...", 5, "2022-01-01", new UserInReview(1, "User 1", "https://kynguyenlamdep.com/wp-content/uploads/2022/06/avatar-cute-meo-con-than-chet.jpg")));
-return reviews;
+        return reviews;
     }
 }

@@ -12,14 +12,12 @@ import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.prm392_product_sale.R;
-import com.example.prm392_product_sale.activity.MainActivity;
 import com.example.prm392_product_sale.adapter.BannerAdapter;
 import com.example.prm392_product_sale.adapter.CategoryAdapter;
 import com.example.prm392_product_sale.adapter.ProductListAdapter;
@@ -54,9 +52,6 @@ public class HomeFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        HomeViewModel homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
-
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
@@ -167,32 +162,32 @@ public class HomeFragment extends Fragment {
         viewPager.setAdapter(bannerAdapter);
     }
 
-private void loadCategories() {
-    ApiService categoryService = RetrofitClient.getClient().create(ApiService.class);
-    Call<List<Category>> call = categoryService.getCategories();
-    call.enqueue(new Callback<List<Category>>() {
-        @Override
-        public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
-            if (response.isSuccessful()) {
-                List<Category> categories = response.body();
-                if (categories != null&&binding!=null) {
-                    binding.progressBarOfficial.setVisibility(View.INVISIBLE);
-                    categoryAdapter.setCategories(categories);
-                    categoryAdapter.notifyDataSetChanged();
+    private void loadCategories() {
+        ApiService categoryService = RetrofitClient.getClient().create(ApiService.class);
+        Call<List<Category>> call = categoryService.getCategories();
+        call.enqueue(new Callback<List<Category>>() {
+            @Override
+            public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
+                if (response.isSuccessful()) {
+                    List<Category> categories = response.body();
+                    if (categories != null && binding != null) {
+                        binding.progressBarOfficial.setVisibility(View.INVISIBLE);
+                        categoryAdapter.setCategories(categories);
+                        categoryAdapter.notifyDataSetChanged();
+                    } else {
+                        Log.e(TAG, "Categories are null");
+                    }
                 } else {
-                    Log.e("MainActivity", "Categories are null");
+                    Log.e(TAG, "Response not successful: " + response.message());
                 }
-            } else {
-                Log.e("MainActivity", "Response not successful: " + response.message());
             }
-        }
 
-        @Override
-        public void onFailure(Call<List<Category>> call, Throwable t) {
-            Log.e("MainActivity", "API call failed: " + t.getMessage());
-        }
-    });
-}
+            @Override
+            public void onFailure(Call<List<Category>> call, Throwable t) {
+                Log.e("MainActivity", "API call failed: " + t.getMessage());
+            }
+        });
+    }
 
     public void loadProducts() {
         productList.clear();
@@ -212,7 +207,7 @@ private void loadCategories() {
                                             document.getString("url"),
                                             document.getDouble("oldPrice").floatValue(),
                                             document.getString("title")
-                                            );
+                                    );
                                     product.setPrice(document.getDouble("price").floatValue());
                                     productList.add(product);
                                 } catch (Exception e) {

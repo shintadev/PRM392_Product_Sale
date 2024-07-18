@@ -76,10 +76,15 @@ public class CartFragment extends Fragment implements CartAdapter.CartUpdateList
 
 
         btnCheckout.setOnClickListener(view -> {
+            if (!cartItemList.isEmpty()) {
             Intent intent = new Intent(getActivity(), BillingActivity.class);
+            intent.putExtra("userId", mAuth.getCurrentUser().getUid());
             intent.putExtra("cartItemList", (Serializable) cartItemList);
             intent.putExtra("totalPrice", tvTotalPrice.getText().toString().substring(7, tvTotalPrice.length() - 1));
             startActivityForResult(intent, PAYPAL_REQUEST_CODE);
+            } else {
+                Toast.makeText(getContext(), "Cart is empty", Toast.LENGTH_SHORT).show();
+            }
         });
 
         btnBack.setOnClickListener(v -> {

@@ -1,6 +1,7 @@
 package com.example.prm392_product_sale.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.prm392_product_sale.R;
 import com.example.prm392_product_sale.model.Product;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
 
@@ -25,6 +27,7 @@ import javax.annotation.Nonnull;
 
 public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.AdminViewHolder> {
 
+    private static final String TAG = "AdminAdapter";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseStorage storage = FirebaseStorage.getInstance();
     private Context context;
@@ -63,10 +66,39 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminAdapter.AdminViewHol
     }
 
     private void removeProduct(Product product) {
-        db.collection("products").document(String.valueOf(product.getId())).delete();
-        storage.getReferenceFromUrl(product.getUrl()).delete();
+        // Delete the product document from Firestore
+        db.collection("products")
+                .document(product.getId())
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    // Delete the product image from Firebase Storage
+                    storage.getReferenceFromUrl(product.getUrl()).delete()
+                            .addOnSuccessListener(aVoid1 -> {
+                                Log.d(TAG, "Product deleted from storage");
 
-        Toast.makeText(context, "Product deleted", Toast.LENGTH_SHORT).show();
+                                // Delete the product from all user carts
+                                db.collection("users").get()
+                                        .addOnCompleteListener(task -> {
+                                            if (task.isSuccessful()) {
+                                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                                    document.getReference().collection("cart")
+                                                            .document(product.getId()).delete();
+                                                }
+
+                                                Toast.makeText(context, "Product deleted", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Log.d(TAG, "Error getting documents: ", task.getException());
+                                                Toast.makeText(context, "Error getting documents", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }).addOnFailureListener(e -> {
+                                Log.e(TAG, "Error deleting product image from storage", e);
+                                Toast.makeText(context, "Error deleting product image from storage", Toast.LENGTH_SHORT).show();
+                            });
+                }).addOnFailureListener(e -> {
+                    Log.e(TAG, "Error deleting product from Firestore", e);
+                    Toast.makeText(context, "Error deleting product from Firestore", Toast.LENGTH_SHORT).show();
+                });
     }
 
     @Override

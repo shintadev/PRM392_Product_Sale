@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +22,9 @@ import com.example.prm392_product_sale.R;
 import com.example.prm392_product_sale.adapter.BillingAdapter;
 import com.example.prm392_product_sale.databinding.ActivityBillingBinding;
 import com.example.prm392_product_sale.model.CartItem;
+import com.example.prm392_product_sale.model.Order;
+import com.example.prm392_product_sale.model.OrderItem;
+import com.example.prm392_product_sale.model.OrderManager;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
@@ -31,23 +35,23 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BillingActivity extends AppCompatActivity {
 
-    private static final String TAG = "BillingActivity";
     public static final int PAYPAL_REQUEST_CODE = 123;
+    private static final String TAG = "BillingActivity";
     private static final int REQUEST_SELECT_ADDRESS = 1;
-    RecyclerView rvBilling;
-    TextView tvSubtotal, tvShipping, tvTax, tvTotal;
-    Button btnCheckout;
-    ActivityBillingBinding binding;
-
+    private RecyclerView rvBilling;
+    private TextView tvSubtotal, tvShipping, tvTax, tvTotal, tvAddress;
+    private Button btnCheckout;
+    private ActivityBillingBinding binding;
     private List<CartItem> cartItemList;
     private BillingAdapter billingAdapter;
     private PayPalConfiguration config;
+    private OrderManager orderManager;
     private String selectedAddress;
-    TextView tvAddress;
     private boolean isSelectingProvince = true;
     private boolean isSelectingDistrict = true;
 
@@ -73,6 +77,7 @@ public class BillingActivity extends AppCompatActivity {
         tvTax = binding.tvTaxBilling;
         tvTotal = binding.tvTotalBilling;
         btnCheckout = binding.btnCheckoutBilling;
+        orderManager = new OrderManager(getIntent().getStringExtra("userId"), this);
 
         billingAdapter = new BillingAdapter(cartItemList, this);
         rvBilling.setLayoutManager(new LinearLayoutManager(this));
@@ -120,8 +125,11 @@ public class BillingActivity extends AppCompatActivity {
         });
     }
 
-
-    private final ActivityResultLauncher<Intent> startAddressSelection = registerForActivityResult(
+    private void AddressSelectionActivity(String API_TYPE) {
+        Intent intent = new Intent(this, AddressSelectionActivity.class);
+        intent.putExtra("API_TYPE", API_TYPE);
+        startAddressSelection.launch(intent);
+    }    private final ActivityResultLauncher<Intent> startAddressSelection = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
@@ -135,25 +143,19 @@ public class BillingActivity extends AppCompatActivity {
                         selectedAddress = selectedAddress + ", " + addressPart;
                     }
                     tvAddress.setText(selectedAddress);
-                    Toast.makeText(this, selectedAddress, Toast.LENGTH_SHORT).show();
+                    tvAddress.setVisibility(View.VISIBLE);
 
                     if (isSelectingProvince) {
                         isSelectingProvince = false;
                         AddressSelectionActivity("QUANHUYEN", TINHTHANH_ID);
 
-                    }
-                    else if (isSelectingDistrict) {
+                    } else if (isSelectingDistrict) {
                         isSelectingDistrict = false;
-                        AddressSelectionActivity("PHUONGXA", TINHTHANH_ID, isSelectingDistrict);}
+                        AddressSelectionActivity("PHUONGXA", TINHTHANH_ID, isSelectingDistrict);
+                    }
                 }
             }
     );
-
-    private void AddressSelectionActivity(String API_TYPE) {
-        Intent intent = new Intent(this, AddressSelectionActivity.class);
-        intent.putExtra("API_TYPE", API_TYPE);
-        startAddressSelection.launch(intent);
-    }
 
     private void AddressSelectionActivity(String API_TYPE, String TINHTHANH_ID) {
         Intent intent = new Intent(this, AddressSelectionActivity.class);
@@ -203,6 +205,18 @@ public class BillingActivity extends AppCompatActivity {
                         // Verify payment on the client side (not recommended for production)
                         if (paymentState.equals("approved")) {
                             // Payment was successful
+                            List<OrderItem> orderItems = new ArrayList<>();
+                            cartItemList.forEach(cartItem -> {
+                                OrderItem orderItem = (OrderItem) cartItem;
+                                orderItems.add(orderItem);
+                            });
+                            Order order = new Order("",
+                                    getIntent().getStringExtra("userId"),
+                                    tvAddress.getText().toString(),
+                                    Float.parseFloat(tvTotal.getText().toString()),
+                                    "On-going",
+                                    orderItems);
+                            orderManager.addOrder(order);
                             setResult(Activity.RESULT_OK, resultIntent);
                             Log.i(TAG, "Payment successful. Payment ID: " + paymentId);
                         } else {
@@ -232,7 +246,6 @@ public class BillingActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -242,4 +255,7 @@ public class BillingActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+
 }

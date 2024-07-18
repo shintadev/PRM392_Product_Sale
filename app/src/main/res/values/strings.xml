@@ -27,4 +27,12 @@
         <item>Sort by Price (High to Low)</item>
     </string-array>
     <string name="paypal_client_id">AcXxfYc61WN4hF8lX0YjKDbo9Za9fb14qh78q12ozbLQXiYGeHFAv841X5IOVMW5EfVCiJt2mW7Fqx2C</string>
+    <string-array name="category_options">
+        <item>Pick a category</item>
+        <item>Laptop</item>
+        <item>Phone</item>
+        <item>Gaming</item>
+        <item>Headset</item>
+        <item>Other</item>
+    </string-array>
 </resources>

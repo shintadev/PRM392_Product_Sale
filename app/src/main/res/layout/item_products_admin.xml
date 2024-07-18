@@ -29,14 +29,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:text="Iphone 12"
-        android:maxLines="2"
         android:ellipsize="end"
+        android:maxLines="2"
+        android:text="Iphone 12"
         android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintEnd_toStartOf="@id/btn_product_delete"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@id/v_admin"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -53,14 +53,16 @@
         app:layout_constraintStart_toStartOf="@id/tv_product_title_admin" />
 
 
-
-        <Button
-            android:id="@+id/btn_product_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:text="Delete" />
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_product_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/red_button_bg"
+        android:orientation="horizontal"
+        android:text="Delete"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

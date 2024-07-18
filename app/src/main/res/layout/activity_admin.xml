@@ -18,37 +18,37 @@
         app:layout_constraintTop_toTopOf="parent">
 
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/chat_image_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?attr/colorPrimary">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/chat_image_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/colorPrimary">
 
-                <ImageView
-                    android:id="@+id/chat_image"
-                    android:layout_width="25dp"
-                    android:layout_height="30dp"
-                    android:layout_marginEnd="16dp"
-                    android:src="@drawable/ic_chat_black_24dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <ImageView
+                android:id="@+id/chat_image"
+                android:layout_width="25dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/ic_chat_black_24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/chat_notification_image"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:src="@drawable/simple_red_circle"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.935"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0" />
+            <ImageView
+                android:id="@+id/chat_notification_image"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/simple_red_circle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.935"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
 
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -111,16 +111,18 @@
             app:layout_constraintStart_toEndOf="@id/tv_total_products"
             app:layout_constraintTop_toTopOf="@id/v_admin_bottom_bar" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_add_product"
             android:layout_width="160dp"
-            android:layout_height="76dp"
+            android:layout_height="match_parent"
+            android:layout_margin="0dp"
+            android:background="@color/green"
             android:text="Add Product"
             android:textAllCaps="false"
+            android:textColor="@color/white"
             android:textSize="18sp"
-            android:layout_margin="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/v_admin_bottom_bar"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
