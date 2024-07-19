@@ -9,27 +9,28 @@
         android:id="@+id/rv_product_images_order"
         android:layout_width="0dp"
         android:layout_height="70dp"
-        android:orientation="horizontal"
         android:background="@drawable/gray_background"
+        android:orientation="horizontal"
+        android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:padding="8dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_product_title_order"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:maxLines="3"
-        android:text="1111"
+        android:layout_marginLeft="30dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="Title"
         android:textColor="@color/black"
         android:textSize="16sp"
-        android:layout_marginLeft="30dp"
         android:textStyle="bold"
         app:layout_constraintBaseline_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/tv_total_price_order"
-        app:layout_constraintStart_toEndOf="@+id/rv_product_images_order"
-        app:layout_constraintTop_toTopOf="@+id/rv_product_images_order" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/rv_product_images_order"
+        app:layout_constraintTop_toTopOf="@id/rv_product_images_order" />
 
     <TextView
         android:id="@+id/tv_total_price_order"
@@ -40,8 +41,8 @@
         android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/rv_product_images_order"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/rv_product_images_order" />
+        app:layout_constraintStart_toEndOf="@id/rv_product_images_order" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

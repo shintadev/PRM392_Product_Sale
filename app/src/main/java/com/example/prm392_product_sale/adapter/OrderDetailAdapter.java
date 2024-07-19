@@ -43,8 +43,8 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
 
         Picasso.get().load(orderItem.getProduct().getUrl()).into(holder.ivOrderDetailImage);
         holder.tvTitle.setText(orderItem.getProduct().getTitle());
-        holder.tvPrice.setText(String.valueOf(orderItem.getProduct().getPrice()));
-        holder.tvTotal.setText(String.valueOf(orderItem.getTotalPrice()));
+        holder.tvPrice.setText(String.format("$%.2f", orderItem.getProduct().getPrice()));
+        holder.tvTotal.setText(String.format("$%.2f", orderItem.getTotalPrice()));
         holder.tvQuantity.setText(String.format("x%d", orderItem.getQuantity()));
 
         CartManager cartManager = new CartManager(userId, context);
