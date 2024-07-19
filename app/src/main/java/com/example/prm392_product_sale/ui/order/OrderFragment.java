@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -51,7 +50,7 @@ public class OrderFragment extends Fragment {
 
         rvOrder = binding.rvOrder;
         orders = new ArrayList<>();
-        orderAdapter = new OrderAdapter(orders,getContext());
+        orderAdapter = new OrderAdapter(orders, getContext());
         rvOrder.setLayoutManager(new LinearLayoutManager(getContext()));
         rvOrder.setAdapter(orderAdapter);
 

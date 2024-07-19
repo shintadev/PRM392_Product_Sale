@@ -17,8 +17,9 @@ import com.example.prm392_product_sale.activity.MainActivity;
 
 public class NotificationService extends Service {
 
-    public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
+    public static final String NOTIFICATION_CHANNEL_ID = "10001";
     public static final String NOTIFICATION_CHANNEL_NAME = "CART_NOTIFICATION";
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -30,7 +31,8 @@ public class NotificationService extends Service {
             int cartItemCount = intent.getIntExtra("cartItemCount", 0);
             showNotification(cartItemCount);
         } else {
-            Log.d("NotificationService", "Intent is null");}
+            Log.d("NotificationService", "Intent is null");
+        }
         return START_STICKY;
     }
 

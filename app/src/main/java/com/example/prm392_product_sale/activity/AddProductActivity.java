@@ -19,7 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.bumptech.glide.Glide;
 import com.example.prm392_product_sale.R;
 import com.example.prm392_product_sale.databinding.ActivityAddProductBinding;
 import com.example.prm392_product_sale.model.Product;

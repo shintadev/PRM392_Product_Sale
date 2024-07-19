@@ -24,7 +24,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
     private String userId;
     private Context context;
 
-    public OrderDetailAdapter(List<OrderItem> orderDetailList,String userId, Context context) {
+    public OrderDetailAdapter(List<OrderItem> orderDetailList, String userId, Context context) {
         this.items = orderDetailList;
         this.userId = userId;
         this.context = context;

@@ -2,7 +2,6 @@ package com.example.prm392_product_sale.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
@@ -20,7 +19,6 @@ import com.example.prm392_product_sale.model.Product;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +92,7 @@ public class AdminActivity extends AppCompatActivity {
 
     public void loadTotalProducts() {
         TextView tvTotalProductsAdmin = binding.tvTotalProductsAdmin;
-        tvTotalProductsAdmin.setText(String.format("%d",adapter.getItemCount()));
+        tvTotalProductsAdmin.setText(String.format("%d", adapter.getItemCount()));
     }
 
     public void loadProducts() {

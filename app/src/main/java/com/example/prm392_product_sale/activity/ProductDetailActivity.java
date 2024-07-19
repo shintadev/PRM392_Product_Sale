@@ -16,7 +16,6 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
-import com.bumptech.glide.Glide;
 import com.example.prm392_product_sale.adapter.TabAdapter;
 import com.example.prm392_product_sale.databinding.ActivityProductDetailBinding;
 import com.example.prm392_product_sale.model.CartManager;
@@ -156,6 +155,11 @@ public class ProductDetailActivity extends AppCompatActivity {
                             final AppCompatButton buttonAddToCart = binding.btnAddToCart;
                             buttonAddToCart.setOnClickListener(v -> {
                                 user = FirebaseAuth.getInstance().getCurrentUser();
+                                if (user == null) {
+                                    Intent intent = new Intent(ProductDetailActivity.this, LoginActivity.class);
+                                    startActivity(intent);
+                                    return;
+                                }
                                 cartManager = new CartManager(user.getUid(), this);
                                 cartManager.addToCart(product, getValue(), () -> {
                                     updateCartNotification(this);
@@ -218,11 +222,11 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     private List<Review> dataExampleForReview() {
         List<Review> reviews = new ArrayList<>();
-        reviews.add(new Review(1, "Review 1", "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...", 5, "2022-01-01", new UserInReview(1, "User 1", "https://kynguyenlamdep.com/wp-content/uploads/2022/06/avatar-cute-meo-con-than-chet.jpg")));
-        reviews.add(new Review(2, "Review 1", "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...", 5, "2022-01-01", new UserInReview(1, "User 1", "https://kynguyenlamdep.com/wp-content/uploads/2022/06/avatar-cute-meo-con-than-chet.jpg")));
-        reviews.add(new Review(3, "Review 1", "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...", 5, "2022-01-01", new UserInReview(1, "User 1", "https://kynguyenlamdep.com/wp-content/uploads/2022/06/avatar-cute-meo-con-than-chet.jpg")));
-        reviews.add(new Review(4, "Review 1", "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...", 5, "2022-01-01", new UserInReview(1, "User 1", "https://kynguyenlamdep.com/wp-content/uploads/2022/06/avatar-cute-meo-con-than-chet.jpg")));
-        reviews.add(new Review(5, "Review 1", "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...", 5, "2022-01-01", new UserInReview(1, "User 1", "https://kynguyenlamdep.com/wp-content/uploads/2022/06/avatar-cute-meo-con-than-chet.jpg")));
+        reviews.add(new Review(1, "Review 1", "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...", 5, "2024-01-05", new UserInReview(1, "User 1", "https://kynguyenlamdep.com/wp-content/uploads/2022/06/avatar-cute-meo-con-than-chet.jpg")));
+        reviews.add(new Review(2, "Review 2", "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...", 5, "2023-02-04", new UserInReview(1, "User 2", "https://kynguyenlamdep.com/wp-content/uploads/2022/06/avatar-cute-meo-con-than-chet.jpg")));
+        reviews.add(new Review(3, "Review 3", "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...", 5, "2022-03-03", new UserInReview(1, "User 3", "https://kynguyenlamdep.com/wp-content/uploads/2022/06/avatar-cute-meo-con-than-chet.jpg")));
+        reviews.add(new Review(4, "Review 4", "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...", 5, "2021-04-02", new UserInReview(1, "User 4", "https://kynguyenlamdep.com/wp-content/uploads/2022/06/avatar-cute-meo-con-than-chet.jpg")));
+        reviews.add(new Review(5, "Review 5", "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...", 5, "2020-05-01", new UserInReview(1, "User 5", "https://kynguyenlamdep.com/wp-content/uploads/2022/06/avatar-cute-meo-con-than-chet.jpg")));
         return reviews;
     }
 }

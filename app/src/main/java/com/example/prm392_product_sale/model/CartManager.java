@@ -27,7 +27,7 @@ public class CartManager {
     }
 
     public void addToCart(Product product, int quantity, CartCallback callback) {
-        FirestoreCallback firestoreCallback  = new FirestoreCallback() {
+        FirestoreCallback firestoreCallback = new FirestoreCallback() {
 
             @Override
             public void onBooleanCallback(boolean exists) {
@@ -68,7 +68,7 @@ public class CartManager {
             }
         };
 
-        isCartItemExists(product.getId(), firestoreCallback );
+        isCartItemExists(product.getId(), firestoreCallback);
     }
 
     public void updateCartItemQuantity(String productId, int quantity) {
@@ -76,7 +76,7 @@ public class CartManager {
                 .collection("cart").document(productId)
                 .update("quantity", quantity)
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(context, "Updated cart item quantity", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "Cart item quantity updated successfully");
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(context, "Failed to update cart item quantity", Toast.LENGTH_SHORT).show();

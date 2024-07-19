@@ -3,7 +3,6 @@ package com.example.prm392_product_sale.network;
 import com.example.prm392_product_sale.model.ApiResponse;
 import com.example.prm392_product_sale.model.Category;
 import com.example.prm392_product_sale.model.Product;
-import com.example.prm392_product_sale.model.Province;
 import com.example.prm392_product_sale.model.User;
 
 import java.util.List;

@@ -10,7 +10,7 @@ public class User {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String email, String displayName, boolean isAdmin){
+    public User(String email, String displayName, boolean isAdmin) {
         this.email = email;
         this.displayName = displayName;
         this.isAdmin = isAdmin;

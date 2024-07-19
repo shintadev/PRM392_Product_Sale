@@ -18,7 +18,7 @@ public class ChatMessage {
         this.timestamp = timestamp;
     }
 
-    public ChatMessage(String senderId, String senderName, String receiverId, String receiverName, String message, long timestamp){
+    public ChatMessage(String senderId, String senderName, String receiverId, String receiverName, String message, long timestamp) {
         this.senderId = senderId;
         this.senderName = senderName;
         this.receiverId = receiverId;

@@ -8,28 +8,26 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.prm392_product_sale.R;
 import com.example.prm392_product_sale.model.ChatMessage;
 
 import java.util.List;
-
-import javax.annotation.Nonnull;
 
 public class ChatAdapter extends BaseAdapter {
 
     private Context context;
     private List<ChatMessage> chatMessages;
 
-    public ChatAdapter( Context context, List<ChatMessage> chatMessages) {
+    public ChatAdapter(Context context, List<ChatMessage> chatMessages) {
         this.context = context;
         this.chatMessages = chatMessages;
     }
+
     @Override
     public int getCount() {
         return chatMessages.size();
     }
+
     @Override
     public Object getItem(int position) {
         return chatMessages.get(position);
@@ -51,7 +49,8 @@ public class ChatAdapter extends BaseAdapter {
 
         TextView messageUser = itemView.findViewById(R.id.tv_message_user);
         TextView messageText = itemView.findViewById(R.id.tv_message_text);
-        TextView messageTime = itemView.findViewById(R.id.tv_message_time);;
+        TextView messageTime = itemView.findViewById(R.id.tv_message_time);
+        ;
 
         messageUser.setText(message.getSenderName());
         messageText.setText(message.getMessage());

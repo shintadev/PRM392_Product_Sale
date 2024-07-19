@@ -1,15 +1,16 @@
 package com.example.prm392_product_sale.adapter;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
+import com.example.prm392_product_sale.R;
 import com.example.prm392_product_sale.model.Category;
 import com.example.prm392_product_sale.ui.home.CategoryViewHolder;
-import com.example.prm392_product_sale.R;
 
 import java.util.List;
 
@@ -17,10 +18,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
 
     private List<Category> categories;
     private OnItemClickListener listener;
-
-    public interface OnItemClickListener {
-        void onItemClick(Category category);
-    }
 
     public CategoryAdapter(List<Category> categories, OnItemClickListener listener) {
         this.categories = categories;
@@ -53,5 +50,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
     @Override
     public int getItemCount() {
         return categories.size();
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(Category category);
     }
 }

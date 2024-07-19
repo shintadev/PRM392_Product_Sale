@@ -8,6 +8,15 @@ public class Review {
     private String date;
     private UserInReview userInReview;
 
+    public Review(int id, String title, String content, int rating, String date, UserInReview userInReview) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.rating = rating;
+        this.date = date;
+        this.userInReview = userInReview;
+    }
+
     // Getters and Setters
     public int getId() {
         return id;
@@ -23,15 +32,6 @@ public class Review {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public Review(int id, String title, String content, int rating, String date, UserInReview userInReview) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.rating = rating;
-        this.date = date;
-        this.userInReview = userInReview;
     }
 
     public String getContent() {

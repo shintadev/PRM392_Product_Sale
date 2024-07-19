@@ -8,16 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.prm392_product_sale.R;
 import com.example.prm392_product_sale.activity.ProductDetailActivity;
 import com.example.prm392_product_sale.model.Product;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -71,7 +67,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 
     public static class ProductListViewHolder extends RecyclerView.ViewHolder {
         ImageView ivProduct;
-        TextView tvTitle, tvPrice,tvOldPrice;
+        TextView tvTitle, tvPrice, tvOldPrice;
 
         public ProductListViewHolder(@NonNull View itemView) {
             super(itemView);

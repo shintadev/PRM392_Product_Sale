@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:id="@+id/linearLayout"
     android:layout_width="wrap_content"
-    android:layout_marginTop="10dp"
     android:layout_height="wrap_content"
-    android:layout_marginStart="20dp"
     android:layout_gravity="center"
+    android:layout_marginStart="20dp"
+    android:layout_marginTop="10dp"
     android:layout_marginEnd="15dp"
-    android:id="@+id/linearLayout" >
+    android:orientation="vertical">
+
     <ImageView
-        android:src="@drawable/cat1"
+        android:id="@+id/pic"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:id="@+id/pic"/>
+        android:src="@drawable/cat1" />
 
     <TextView
         android:id="@+id/title"
@@ -21,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Title"
-        android:textColor="@color/black"
         android:textAlignment="center"
+        android:textColor="@color/black"
         android:textSize="12sp" />
 </LinearLayout>

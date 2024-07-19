@@ -134,6 +134,13 @@ public class BillingActivity extends AppCompatActivity {
         intent.putExtra("API_TYPE", API_TYPE);
         intent.putExtra("TINHTHANH_ID", TINHTHANH_ID);
         startAddressSelection.launch(intent);
+    }
+
+    private void AddressSelectionActivity(String API_TYPE, String QUANHUYEN_ID, boolean isSelectingDistrict) {
+        Intent intent = new Intent(this, AddressSelectionActivity.class);
+        intent.putExtra("API_TYPE", API_TYPE);
+        intent.putExtra("QUANHUYEN_ID", QUANHUYEN_ID);
+        startAddressSelection.launch(intent);
     }    private final ActivityResultLauncher<Intent> startAddressSelection = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -161,13 +168,6 @@ public class BillingActivity extends AppCompatActivity {
                 }
             }
     );
-
-    private void AddressSelectionActivity(String API_TYPE, String QUANHUYEN_ID, boolean isSelectingDistrict) {
-        Intent intent = new Intent(this, AddressSelectionActivity.class);
-        intent.putExtra("API_TYPE", API_TYPE);
-        intent.putExtra("QUANHUYEN_ID", QUANHUYEN_ID);
-        startAddressSelection.launch(intent);
-    }
 
     private void processPayment(String amount) {
         PayPalPayment payment = new PayPalPayment(new BigDecimal(amount), "USD",

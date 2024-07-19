@@ -7,7 +7,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.prm392_product_sale.ui.fragment.DescriptionFragment;
 import com.example.prm392_product_sale.ui.fragment.ReviewFragment;
-import com.example.prm392_product_sale.ui.fragment.SoldFragment;
 
 
 public class TabAdapter extends FragmentPagerAdapter {

@@ -17,6 +17,7 @@ import com.example.prm392_product_sale.R;
 import com.example.prm392_product_sale.model.CartItem;
 import com.example.prm392_product_sale.model.CartManager;
 import com.example.prm392_product_sale.service.NotificationService;
+import com.example.prm392_product_sale.service.OnCartUpdateListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
@@ -27,13 +28,15 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     private List<CartItem> items;
     private Context context;
     private CartUpdateListener cartUpdateListener;
+    private OnCartUpdateListener onCartUpdatedListener;
     private FirebaseUser user;
     private CartManager cartManager;
 
-    public CartAdapter(List<CartItem> items, Context context, CartUpdateListener cartUpdateListener) {
+    public CartAdapter(List<CartItem> items, Context context, CartUpdateListener cartUpdateListener, OnCartUpdateListener onCartUpdatedListener) {
         this.items = items;
         this.context = context;
         this.cartUpdateListener = cartUpdateListener;
+        this.onCartUpdatedListener = onCartUpdatedListener;
     }
 
     @NonNull
@@ -71,6 +74,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                 notifyDataSetChanged();
             }
             cartUpdateListener.onCartUpdated();
+            onCartUpdatedListener.onQuantityChanged(item.getQuantity());
             updateCartNotification(context);
         });
 
@@ -82,6 +86,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                 cartManager.updateCartItemQuantity(item.getProduct().getId(), newQuantity);
                 holder.tvProductTotalPriceCart.setText(String.format("$%.2f", item.getProduct().getPrice() * newQuantity));
                 cartUpdateListener.onCartUpdated();
+                onCartUpdatedListener.onQuantityChanged(item.getQuantity());
                 updateCartNotification(context);
             }
         });

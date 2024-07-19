@@ -4,9 +4,11 @@ package com.example.prm392_product_sale.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.prm392_product_sale.R;
 import com.example.prm392_product_sale.adapter.AddressAdapter;
 import com.example.prm392_product_sale.model.ApiResponse;
@@ -15,6 +17,7 @@ import com.example.prm392_product_sale.network.ApiService;
 import com.example.prm392_product_sale.network.RetrofitClientProvince;
 
 import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,13 +34,12 @@ public class AddressSelectionActivity extends AppCompatActivity {
         rvAddresses = findViewById(R.id.rv_addresses);
         rvAddresses.setLayoutManager(new LinearLayoutManager(this));
 
-       String apiType = getIntent().getStringExtra("API_TYPE");
-        if (apiType.equals("TINHTHANH") ) {
+        String apiType = getIntent().getStringExtra("API_TYPE");
+        if (apiType.equals("TINHTHANH")) {
             fetchAddresses();
         } else if (apiType.equals("QUANHUYEN")) {
             fetchQuanHuyen(getIntent().getStringExtra("TINHTHANH_ID"));
-        }
-        else if (apiType.equals("PHUONGXA")) {
+        } else if (apiType.equals("PHUONGXA")) {
             fetchPhuongXa(getIntent().getStringExtra("QUANHUYEN_ID"));
         }
     }

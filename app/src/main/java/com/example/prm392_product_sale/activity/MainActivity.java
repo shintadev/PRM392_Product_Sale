@@ -1,20 +1,15 @@
 package com.example.prm392_product_sale.activity;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -25,13 +20,14 @@ import com.example.prm392_product_sale.R;
 import com.example.prm392_product_sale.databinding.ActivityMainBinding;
 import com.example.prm392_product_sale.model.CartManager;
 import com.example.prm392_product_sale.service.NotificationService;
+import com.example.prm392_product_sale.service.OnCartUpdateListener;
 import com.example.prm392_product_sale.ui.profile.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class MainActivity extends AppCompatActivity implements ProfileFragment.OnDataPass {
+public class MainActivity extends AppCompatActivity implements ProfileFragment.OnDataPass, OnCartUpdateListener {
 
     private static final String TAG = "MainActivity";
     ImageView imageChat;
@@ -96,11 +92,6 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         // Find the NavController and set up navigation
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupWithNavController(navView, navController);
-
-        if (currentUid != null) {
-            updateCartNotification(this);
-        }
-
     }
 
     @Override
@@ -111,6 +102,9 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
     @Override
     protected void onResume() {
         super.onResume();
+        if (currentUid != null) {
+            updateCartNotification(this);
+        }
     }
 
     @Override
@@ -144,7 +138,6 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                         currentUsername = document.getString("displayName");
                         isAdmin = Boolean.TRUE.equals(document.getBoolean("admin"));
                         if (isAdmin) {
-                            binding.chatNotificationImage.setVisibility(View.INVISIBLE);
                             binding.chatImage.setImageResource(R.drawable.ic_person_black_24dp);
                             binding.chatImage.setOnClickListener(view -> {
                                 Intent intent = new Intent(this, AdminActivity.class);
@@ -175,12 +168,29 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
 
             @Override
             public void onIntCallback(int count) {
+                binding.tvCartCountMain.setText(String.format("%d", count));
                 Intent serviceIntent = new Intent(context, NotificationService.class);
                 serviceIntent.putExtra("cartItemCount", count);
                 context.startService(serviceIntent);
             }
         };
 
+        cartManager.getCartItemCount(callback);
+    }
+
+    @Override
+    public void onQuantityChanged(int quantity) {
+        CartManager.FirestoreCallback callback = new CartManager.FirestoreCallback() {
+            @Override
+            public void onBooleanCallback(boolean exists) {
+                // Handle boolean callback
+            }
+
+            @Override
+            public void onIntCallback(int count) {
+                binding.tvCartCountMain.setText(String.format("%d", count));
+            }
+        };
         cartManager.getCartItemCount(callback);
     }
 }

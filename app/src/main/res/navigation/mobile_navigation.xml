@@ -21,8 +21,7 @@
         android:id="@id/navigation_order"
         android:name="com.example.prm392_product_sale.ui.order.OrderFragment"
         android:label="@string/title_order"
-        tools:layout="@layout/fragment_order"
-        />
+        tools:layout="@layout/fragment_order" />
 
     <fragment
         android:id="@+id/navigation_profile"

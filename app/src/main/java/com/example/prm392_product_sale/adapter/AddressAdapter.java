@@ -17,10 +17,6 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
     private final List<Province> addressList;
     private final OnAddressClickListener listener;
 
-    public interface OnAddressClickListener {
-        void onAddressClick(Province address);
-    }
-
     public AddressAdapter(List<Province> addressList, OnAddressClickListener listener) {
         this.addressList = addressList;
         this.listener = listener;
@@ -42,6 +38,10 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
     @Override
     public int getItemCount() {
         return addressList.size();
+    }
+
+    public interface OnAddressClickListener {
+        void onAddressClick(Province address);
     }
 
     static class AddressViewHolder extends RecyclerView.ViewHolder {

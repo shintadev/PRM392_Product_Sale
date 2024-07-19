@@ -48,7 +48,6 @@ public class ProfileFragment extends Fragment {
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseFirestore firestore;
     private FragmentProfileBinding binding;
-
     private OnDataPass dataPasser;
 
     @Override
@@ -87,6 +86,9 @@ public class ProfileFragment extends Fragment {
             mGoogleSignInClient.signOut();
             loadProfile(null);
             passDataToActivity();
+            if (getActivity() != null) {
+                Toast.makeText(getActivity(), "Logged out", Toast.LENGTH_SHORT).show();
+            }
         });
 
         RecyclerView recyclerView = binding.profileOptionsList;

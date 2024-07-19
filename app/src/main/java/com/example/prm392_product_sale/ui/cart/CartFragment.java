@@ -26,6 +26,7 @@ import com.example.prm392_product_sale.adapter.CartAdapter;
 import com.example.prm392_product_sale.databinding.FragmentCartBinding;
 import com.example.prm392_product_sale.model.CartItem;
 import com.example.prm392_product_sale.model.CartManager;
+import com.example.prm392_product_sale.service.OnCartUpdateListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -44,6 +45,7 @@ public class CartFragment extends Fragment implements CartAdapter.CartUpdateList
     private CartAdapter cartAdapter;
     private List<CartItem> cartItemList;
     private CartManager cartManager;
+    private OnCartUpdateListener onCartUpdateListener;
     private AppCompatButton btnCheckout;
     private FragmentCartBinding binding;
     private ImageView btnBack;
@@ -69,7 +71,10 @@ public class CartFragment extends Fragment implements CartAdapter.CartUpdateList
         btnBack = binding.backBtn;
 
         cartItemList = new ArrayList<>();
-        cartAdapter = new CartAdapter(cartItemList, getContext(), this);
+        if (getContext() != null && getContext() instanceof OnCartUpdateListener) {
+            onCartUpdateListener = (OnCartUpdateListener) getContext();
+        }
+        cartAdapter = new CartAdapter(cartItemList, getContext(), this, onCartUpdateListener);
         rvCart.setLayoutManager(new LinearLayoutManager(getContext()));
         rvCart.setAdapter(cartAdapter);
 
@@ -97,7 +102,6 @@ public class CartFragment extends Fragment implements CartAdapter.CartUpdateList
     @Override
     public void onResume() {
         super.onResume();
-        loadCartItems();
     }
 
     @Override
@@ -138,6 +142,7 @@ public class CartFragment extends Fragment implements CartAdapter.CartUpdateList
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        onCartUpdateListener = null;
     }
 
     @Override

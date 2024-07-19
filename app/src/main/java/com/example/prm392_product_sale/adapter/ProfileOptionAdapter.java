@@ -41,7 +41,7 @@ public class ProfileOptionAdapter extends RecyclerView.Adapter<ProfileOptionAdap
                     Intent intent = new Intent(v.getContext(), MapActivity.class);
                     v.getContext().startActivity(intent);
                 });
-            break;
+                break;
         }
     }
 
