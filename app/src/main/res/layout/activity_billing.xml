@@ -11,7 +11,7 @@
         android:id="@+id/tb_billing"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/light_blue"
+        android:background='@drawable/gray_background'
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -173,7 +173,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="24dp"
-        android:background="@color/blue"
+        android:background="@drawable/green_button_bg"
         android:textColor="@color/white"
         android:text="Pay with Paypal"
         android:textAllCaps="false"
