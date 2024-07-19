@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.bumptech.glide.Glide;
 import com.example.prm392_product_sale.R;
 import com.example.prm392_product_sale.databinding.ActivityAddProductBinding;
 import com.example.prm392_product_sale.model.Product;
@@ -26,6 +27,7 @@ import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.UUID;
 
@@ -118,7 +120,7 @@ public class AddProductActivity extends AppCompatActivity {
 
         if (resultCode == Activity.RESULT_OK && data != null) {
             imageUri = data.getData();
-            ivProductImage.setImageURI(imageUri);
+            Picasso.get().load(imageUri).into(ivProductImage);
         } else {
             Toast.makeText(this, "Image pick failed", Toast.LENGTH_SHORT).show();
         }

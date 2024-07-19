@@ -70,6 +70,7 @@ public class OrderFragment extends Fragment {
                     for (DocumentSnapshot snapshot : task.getResult()) {
                         Order order = snapshot.toObject(Order.class);
                         if (order != null) {
+                            order.setId(snapshot.getId());
                             orders.add(order);
                         }
                     }

@@ -3,8 +3,10 @@ package com.example.prm392_product_sale.activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,15 +18,17 @@ import com.example.prm392_product_sale.adapter.OrderDetailAdapter;
 import com.example.prm392_product_sale.databinding.ActivityOrderDetailBinding;
 import com.example.prm392_product_sale.model.CartManager;
 import com.example.prm392_product_sale.model.Order;
+import com.example.prm392_product_sale.model.OrderManager;
 
 public class OrderDetailActivity extends AppCompatActivity {
 
     private static final String TAG = "OrderDetailActivity";
     private TextView tvStatus, tvDeliveryAddress, tvSubtotal, tvShipping, tvTax, tvTotal;
     private RecyclerView rvOrderDetail;
-    private Button btnBuyAgain;
+    private Button btnBuyAgain, btnCompleteOrder;
     private OrderDetailAdapter orderDetailAdapter;
     private CartManager cartManager;
+    private OrderManager orderManager;
     private ActivityOrderDetailBinding binding;
 
     @Override
@@ -50,6 +54,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         tvTax = binding.tvTaxOrder;
         tvTotal = binding.tvTotalOrder;
         btnBuyAgain = binding.btnBuyAgainOrder;
+        btnCompleteOrder = binding.btnCompleteOrder;
         rvOrderDetail = binding.rvOrderDetail;
 
         if (getIntent().hasExtra("order")) {
@@ -66,14 +71,31 @@ public class OrderDetailActivity extends AppCompatActivity {
             rvOrderDetail.setLayoutManager(new LinearLayoutManager(this));
             rvOrderDetail.setAdapter(orderDetailAdapter);
 
-            btnBuyAgain.setOnClickListener(v -> {
-                cartManager = new CartManager(order.getUserId(), this);
-                order.getOrderItems().forEach(item -> {
-                    cartManager.addToCart(item.getProduct(), item.getQuantity(), () -> {
-                        Log.d(TAG, "addToCart: " + item.getProduct().getTitle());
+            binding.pbOrderDetail.setVisibility(View.GONE);
+
+            if (order.getStatus().equals("Success")) {
+                btnBuyAgain.setVisibility(View.VISIBLE);
+                btnCompleteOrder.setVisibility(View.GONE);
+                btnBuyAgain.setOnClickListener(v -> {
+                    cartManager = new CartManager(order.getUserId(), this);
+                    order.getOrderItems().forEach(item -> {
+                        cartManager.addToCart(item.getProduct(), item.getQuantity(), () -> {
+                            Log.d(TAG, "addToCart: " + item.getProduct().getTitle());
+                        });
                     });
                 });
-            });
+            } else {
+                btnBuyAgain.setVisibility(View.INVISIBLE);
+                btnCompleteOrder.setVisibility(View.VISIBLE);
+                btnCompleteOrder.setOnClickListener(v -> {
+                    order.setStatus("Success");
+                    Log.d(TAG, "onCreate: " + order.getStatus());
+                    orderManager = new OrderManager(order.getUserId(), this);
+                    orderManager.updateOrder(order);
+                    Toast.makeText(this, "Order is marked as Success", Toast.LENGTH_SHORT).show();
+                    finish();
+                });
+            }
         }
     }
 

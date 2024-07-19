@@ -127,6 +127,7 @@ public class ChatActivity extends AppCompatActivity {
                         return;
                     }
 
+                    assert snapshots != null;
                     for (DocumentChange dc : snapshots.getDocumentChanges()) {
                         switch (dc.getType()) {
                             case ADDED:
