@@ -3,6 +3,7 @@ package com.example.prm392_product_sale.activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -65,6 +66,8 @@ public class OrderDetailActivity extends AppCompatActivity {
             orderDetailAdapter = new OrderDetailAdapter(order.getOrderItems(), order.getUserId(), this);
             rvOrderDetail.setLayoutManager(new LinearLayoutManager(this));
             rvOrderDetail.setAdapter(orderDetailAdapter);
+
+            binding.pbOrderDetail.setVisibility(View.GONE);
 
             btnBuyAgain.setOnClickListener(v -> {
                 cartManager = new CartManager(order.getUserId(), this);

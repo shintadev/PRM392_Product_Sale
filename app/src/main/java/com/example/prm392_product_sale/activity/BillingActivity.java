@@ -171,7 +171,7 @@ public class BillingActivity extends AppCompatActivity {
 
     private void processPayment(String amount) {
         PayPalPayment payment = new PayPalPayment(new BigDecimal(amount), "USD",
-                "Sample Item", PayPalPayment.PAYMENT_INTENT_SALE);
+                "Order Payment", PayPalPayment.PAYMENT_INTENT_SALE);
 
         Intent intent = new Intent(this, PaymentActivity.class);
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);

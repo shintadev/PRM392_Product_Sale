@@ -46,14 +46,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Location"
-        app:layout_constraintTop_toTopOf="@id/tv_order_location_title"
         app:layout_constraintBottom_toBottomOf="@id/tv_order_location_title"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_order_location_title" />
 
+    <ProgressBar
+        android:id="@+id/pb_order_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/rv_order_detail"
+        app:layout_constraintEnd_toEndOf="@id/rv_order_detail"
+        app:layout_constraintStart_toStartOf="@id/rv_order_detail"
+        app:layout_constraintTop_toTopOf="@id/rv_order_detail" />
+    
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_order_detail"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_margin="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintBottom_toTopOf="@id/cl_total_order"
         app:layout_constraintTop_toBottomOf="@id/tv_order_location_content" />

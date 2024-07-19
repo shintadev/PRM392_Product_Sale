@@ -26,6 +26,7 @@ import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.UUID;
 
@@ -118,7 +119,7 @@ public class AddProductActivity extends AppCompatActivity {
 
         if (resultCode == Activity.RESULT_OK && data != null) {
             imageUri = data.getData();
-            ivProductImage.setImageURI(imageUri);
+            Picasso.get().load(imageUri).fit().centerCrop().into(ivProductImage);
         } else {
             Toast.makeText(this, "Image pick failed", Toast.LENGTH_SHORT).show();
         }
