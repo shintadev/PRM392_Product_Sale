@@ -222,11 +222,11 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     private List<Review> dataExampleForReview() {
         List<Review> reviews = new ArrayList<>();
-        reviews.add(new Review(1, "Review 1", "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...", 5, "2024-01-05", new UserInReview(1, "User 1", "https://kynguyenlamdep.com/wp-content/uploads/2022/06/avatar-cute-meo-con-than-chet.jpg")));
-        reviews.add(new Review(2, "Review 2", "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...", 5, "2023-02-04", new UserInReview(1, "User 2", "https://kynguyenlamdep.com/wp-content/uploads/2022/06/avatar-cute-meo-con-than-chet.jpg")));
-        reviews.add(new Review(3, "Review 3", "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...", 5, "2022-03-03", new UserInReview(1, "User 3", "https://kynguyenlamdep.com/wp-content/uploads/2022/06/avatar-cute-meo-con-than-chet.jpg")));
-        reviews.add(new Review(4, "Review 4", "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...", 5, "2021-04-02", new UserInReview(1, "User 4", "https://kynguyenlamdep.com/wp-content/uploads/2022/06/avatar-cute-meo-con-than-chet.jpg")));
-        reviews.add(new Review(5, "Review 5", "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...", 5, "2020-05-01", new UserInReview(1, "User 5", "https://kynguyenlamdep.com/wp-content/uploads/2022/06/avatar-cute-meo-con-than-chet.jpg")));
+        reviews.add(new Review(1, "Great Product!", "I have been using this product for a year and it has exceeded my expectations.", 5, "2024-01-05", new UserInReview(1, "JohnDoe", "https://example.com/avatar1.jpg")));
+        reviews.add(new Review(2, "Not bad", "The product is decent but could use some improvements.", 3, "2023-02-04", new UserInReview(2, "JaneSmith", "https://example.com/avatar2.jpg")));
+        reviews.add(new Review(3, "Terrible experience", "I had a bad experience with this product. It broke down after a month.", 1, "2022-03-03", new UserInReview(3, "MikeJohnson", "https://example.com/avatar3.jpg")));
+        reviews.add(new Review(4, "Good value for money", "The product is worth the price. Good value for money.", 4, "2021-04-02", new UserInReview(4, "EmilyClark", "https://example.com/avatar4.jpg")));
+        reviews.add(new Review(5, "Excellent customer service", "Customer service was very responsive and helpful.", 5, "2020-05-01", new UserInReview(5, "ChrisBrown", "https://example.com/avatar5.jpg")));
         return reviews;
     }
 }
